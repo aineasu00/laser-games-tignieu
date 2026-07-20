@@ -108,6 +108,8 @@
   nav{display:none;gap:26px}
   nav a{font-family:'Chakra Petch',sans-serif;font-size:.8rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .2s}
   nav a:hover,nav a:focus-visible{color:var(--biolume)}
+  nav a.event{color:var(--alert)}
+  nav a.event:hover,nav a.event:focus-visible{color:#ff7046}
   .btn{display:inline-block;font-family:'Chakra Petch',sans-serif;font-weight:700;letter-spacing:.08em;text-decoration:none;text-align:center;background:var(--alert);color:#120602;padding:13px 24px;clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);transition:transform .15s ease,background .2s}
   .btn:hover,.btn:focus-visible{background:#ff7046;transform:translateY(-1px)}
   .btn-ghost{background:transparent;color:var(--biolume);border:1px solid var(--biolume)}
@@ -201,6 +203,13 @@
   .chip-nav a{flex-shrink:0;font-family:'Chakra Petch',sans-serif;font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--sand);text-decoration:none;border:1px solid var(--line);padding:8px 14px;border-radius:999px;background:var(--hull)}
   .chip-nav a:active{border-color:var(--biolume);color:var(--biolume)}
 
+  /* ---------- bandeau événement ---------- */
+  .event-banner{background:var(--hull);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .event-banner .wrap{display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between}
+  .event-banner .event-title{font-family:'Chakra Petch',sans-serif;font-size:1.15rem;font-weight:700;color:var(--sand)}
+  .event-banner .event-title span{color:var(--alert)}
+  .event-banner .event-meta{color:var(--dim);font-size:.95rem;margin-top:4px}
+
   @media(max-width:480px){
     .hero-actions{flex-direction:column}
     .hero-actions .btn{width:100%;padding:16px 24px;font-size:1.02rem}
@@ -244,6 +253,7 @@
       <a href="#tarifs">Tarifs</a>
       <a href="#faq">Questions</a>
       <a href="#infos">Infos</a>
+      <a class="event" href="battle-royale.html">⚡ Battle Royale</a>
     </nav>
     <a class="btn header-cta" href="tel:+33607728164">06 07 72 81 64</a>
   </div>
@@ -254,6 +264,7 @@
     <a href="#tarifs">💶 Tarifs</a>
     <a href="#faq">❓ Questions</a>
     <a href="#infos">📍 Infos</a>
+    <a href="battle-royale.html">⚡ Battle Royale</a>
   </nav>
 </header>
 
@@ -276,6 +287,19 @@
       <span><b>N°1</b> des activités à Tignieu — Tripadvisor</span>
       <span><b>400 m²</b> de labyrinthe · 3 ambiances</span>
     </div>
+  </div>
+</section>
+
+<div class="hazard" role="presentation"></div>
+
+<!-- ================= BANDEAU ÉVÉNEMENT BATTLE ROYALE ================= -->
+<section class="event-banner" aria-label="Événement Battle Royale">
+  <div class="wrap">
+    <div>
+      <div class="event-title">⚡ Battle Royale Laser — <span>Jeudi 16 juillet · 19 h – 23 h</span></div>
+      <div class="event-meta">10 vies. 400 m². Un seul survivant. Inscription gratuite obligatoire.</div>
+    </div>
+    <a class="btn" href="battle-royale.html">Je m'inscris</a>
   </div>
 </section>
 
