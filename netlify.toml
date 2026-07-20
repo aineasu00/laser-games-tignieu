@@ -1,0 +1,12 @@
+[build]
+  publish = "src"
+
+[[redirects]]
+  from = "/battle-royale"
+  to = "/battle-royale.html"
+  status = 200
+
+[[redirects]]
+  from = "/tableau"
+  to = "/tableau.html"
+  status = 200
