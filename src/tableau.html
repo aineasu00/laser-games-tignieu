@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tableau de bataille — Battle Royale · Laser Games Tignieu</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230B0E13'/%3E%3Ccircle cx='16' cy='16' r='10' fill='none' stroke='%23FF5A2D' stroke-width='2.5'/%3E%3Ccircle cx='16' cy='16' r='3.5' fill='%234FE3C1'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#0B0E13; --hull:#161B22; --line:#2C3542;
+    --biolume:#4FE3C1; --laser:#4EA8FF; --alert:#FF5A2D;
+    --hazard:#F2C40F; --sand:#EDE9DF; --dim:#9AA3B0;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--void);color:var(--sand);font-family:'Manrope',sans-serif;min-height:100vh;overflow-x:hidden}
+  button{font-family:'Chakra Petch',sans-serif;cursor:pointer;border:none}
+
+  .hazard{height:8px;background:repeating-linear-gradient(-45deg,var(--hazard) 0 16px,#101318 16px 32px)}
+
+  /* ---------- barre de contrôle ---------- */
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 22px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .title{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:clamp(1.1rem,2.5vw,1.7rem);letter-spacing:.04em;text-transform:uppercase}
+  .title .alt{color:var(--alert)}
+  .title .sub{color:var(--laser);font-size:.6em;display:block;letter-spacing:.18em}
+  .counters{display:flex;gap:26px;font-family:'Chakra Petch',sans-serif}
+  .counter{text-align:center}
+  .counter b{display:block;font-size:clamp(1.6rem,3vw,2.4rem);line-height:1.05;color:var(--biolume)}
+  .counter.out b{color:var(--alert)}
+  .counter span{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+  .controls{display:flex;gap:10px;flex-wrap:wrap}
+  .ctl{background:var(--hull);color:var(--sand);border:1px solid var(--line);padding:9px 14px;font-size:.8rem;font-weight:600;letter-spacing:.08em}
+  .ctl:hover{border-color:var(--biolume);color:var(--biolume)}
+  .ctl.danger:hover{border-color:var(--alert);color:var(--alert)}
+
+  /* ---------- ajout joueur ---------- */
+  .addbar{display:flex;gap:10px;padding:14px 22px;border-bottom:1px solid var(--line);background:var(--hull)}
+  .addbar input{flex:1;max-width:420px;background:var(--void);border:1px solid var(--line);color:var(--sand);font-family:'Manrope',sans-serif;font-size:1.05rem;padding:12px 16px}
+  .addbar input:focus{outline:2px solid var(--biolume);border-color:var(--biolume)}
+  .addbar button{background:var(--alert);color:#120602;font-weight:700;font-size:.95rem;letter-spacing:.08em;padding:12px 22px;clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px)}
+  .addbar button:hover{background:#ff7046}
+
+  /* ---------- grille joueurs ---------- */
+  .board{padding:20px 22px 60px;display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+  .card{background:var(--hull);border:1px solid var(--line);padding:16px 18px;clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);transition:transform .18s ease, border-color .18s;position:relative}
+  .card.hit{animation:hitflash .45s ease}
+  @keyframes hitflash{0%{border-color:var(--alert);transform:scale(1.02)}100%{border-color:var(--line);transform:scale(1)}}
+  .card .rank{position:absolute;top:10px;right:14px;font-family:'Chakra Petch',sans-serif;color:var(--dim);font-size:.8rem;letter-spacing:.1em}
+  .card .name{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:1.35rem;line-height:1.15;margin-bottom:8px;padding-right:44px;word-break:break-word}
+  .hearts{font-size:1.15rem;letter-spacing:2px;color:var(--alert);min-height:1.6em;line-height:1.35}
+  .hearts .lost{color:#3a3f48}
+  .card .row{display:flex;align-items:center;justify-content:space-between;margin-top:12px;gap:10px}
+  .lifebtns{display:flex;gap:8px}
+  .lb{width:52px;height:44px;font-size:1.4rem;font-weight:700;background:var(--void);border:1px solid var(--line);color:var(--sand)}
+  .lb.minus:hover{border-color:var(--alert);color:var(--alert)}
+  .lb.plus:hover{border-color:var(--biolume);color:var(--biolume)}
+  .remove{background:none;color:var(--dim);font-size:.72rem;letter-spacing:.1em}
+  .remove:hover{color:var(--alert)}
+
+  .card.dead{opacity:.55;border-color:#2a1510}
+  .card.dead .name{text-decoration:line-through;color:var(--dim)}
+  .dead-stamp{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-12deg);font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:1.5rem;color:var(--alert);border:3px solid var(--alert);padding:2px 14px;letter-spacing:.14em;pointer-events:none;background:rgba(11,14,19,.6)}
+  .revive{background:var(--biolume);color:#04110C;font-weight:700;font-size:.78rem;letter-spacing:.08em;padding:10px 14px}
+  .revive:hover{background:#7cf0d8}
+  .pass-badge{display:inline-block;background:var(--biolume);color:#04110C;font-family:'Chakra Petch',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.12em;padding:2px 8px;margin-left:8px;vertical-align:middle}
+
+  /* ---------- vainqueur ---------- */
+  .winner-overlay{position:fixed;inset:0;background:rgba(11,14,19,.94);display:none;align-items:center;justify-content:center;z-index:100;text-align:center;padding:20px}
+  .winner-overlay.show{display:flex}
+  .winner-box h2{font-family:'Chakra Petch',sans-serif;font-size:clamp(1.4rem,4vw,2.2rem);letter-spacing:.2em;color:var(--hazard);text-transform:uppercase;animation:pulse 1.2s infinite}
+  .winner-box .wname{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:clamp(3rem,11vw,7.5rem);line-height:1.05;margin:18px 0;color:var(--sand);text-shadow:0 0 40px rgba(79,227,193,.55)}
+  .winner-box p{color:var(--dim);font-size:1.1rem}
+  .winner-box .ctl{margin-top:30px;font-size:.9rem;padding:12px 22px}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+
+  .empty{grid-column:1/-1;text-align:center;color:var(--dim);padding:60px 20px;font-size:1.1rem}
+  .empty b{font-family:'Chakra Petch',sans-serif;color:var(--sand);display:block;font-size:1.4rem;margin-bottom:8px}
+
+  /* Mode TV : plus grand quand plein écran */
+  .tv .board{grid-template-columns:repeat(auto-fill,minmax(330px,1fr))}
+  .tv .card .name{font-size:1.7rem}
+  .tv .hearts{font-size:1.45rem}
+</style>
+</head>
+<body>
+<div class="hazard"></div>
+
+<div class="topbar">
+  <div class="title">Battle <span class="alt">Royale</span><span class="sub">Laser Games Tignieu — Tableau des survivants</span></div>
+  <div class="counters">
+    <div class="counter"><b id="c-alive">0</b><span>Survivants</span></div>
+    <div class="counter out"><b id="c-dead">0</b><span>Éliminés</span></div>
+    <div class="counter"><b id="c-lives">0</b><span>Vies en jeu</span></div>
+  </div>
+  <div class="controls">
+    <button class="ctl" id="btn-fs">⛶ Plein écran TV</button>
+    <button class="ctl" id="btn-setup">✎ Mode saisie</button>
+    <button class="ctl danger" id="btn-reset">↺ Réinitialiser</button>
+  </div>
+</div>
+
+<div class="addbar" id="addbar">
+  <input id="new-name" type="text" placeholder="Nom du combattant… (Entrée pour ajouter)" autocomplete="off">
+  <button id="btn-add">+ Engager</button>
+</div>
+
+<main class="board" id="board"></main>
+
+<div class="winner-overlay" id="winner">
+  <div class="winner-box">
+    <h2>★ Dernier survivant ★</h2>
+    <div class="wname" id="winner-name"></div>
+    <p>Vainqueur de la première édition du Battle Royale Laser</p>
+    <button class="ctl" id="btn-close-winner">Revenir au tableau</button>
+  </div>
+</div>
+
+<script>
+'use strict';
+var MAX_LIVES = 10;
+var players = [];
+
+// ---------- persistance locale (survit au rafraîchissement) ----------
+function save(){ try{ localStorage.setItem('lgt-battle', JSON.stringify(players)); }catch(e){} }
+function load(){ try{ var d=localStorage.getItem('lgt-battle'); if(d) players=JSON.parse(d); }catch(e){ players=[]; } }
+
+// ---------- rendu ----------
+function hearts(n){
+  var s='';
+  for(var i=0;i<MAX_LIVES;i++) s += i<n ? '♥' : '<span class="lost">♥</span>';
+  return s;
+}
+function render(hitId){
+  var board=document.getElementById('board');
+  var alive=players.filter(function(p){return p.lives>0});
+  var dead=players.filter(function(p){return p.lives<=0});
+  alive.sort(function(a,b){return b.lives-a.lives || a.name.localeCompare(b.name)});
+  dead.sort(function(a,b){return a.name.localeCompare(b.name)});
+  var sorted=alive.concat(dead);
+
+  if(!sorted.length){
+    board.innerHTML='<div class="empty"><b>Aucun combattant engagé</b>Ajoutez les joueurs inscrits avec le champ ci-dessus — chacun démarre avec 10 vies.</div>';
+  } else {
+    board.innerHTML=sorted.map(function(p,idx){
+      var isDead=p.lives<=0;
+      return '<div class="card'+(isDead?' dead':'')+(p.id===hitId?' hit':'')+'" data-id="'+p.id+'">'
+        + (!isDead ? '<div class="rank">#'+(idx+1)+'</div>' : '')
+        + '<div class="name">'+esc(p.name)+(p.pass?'<span class="pass-badge">PASS</span>':'')+'</div>'
+        + '<div class="hearts">'+hearts(p.lives)+'</div>'
+        + '<div class="row">'
+        + (isDead
+            ? '<div class="dead-stamp">ÉLIMINÉ</div><button class="revive" data-act="revive" data-id="'+p.id+'">⟲ Rattrapage (Pass Mois)</button>'
+            : '<div class="lifebtns"><button class="lb minus" data-act="minus" data-id="'+p.id+'" aria-label="Retirer une vie">−</button><button class="lb plus" data-act="plus" data-id="'+p.id+'" aria-label="Rendre une vie">+</button></div>')
+        + '<button class="remove" data-act="remove" data-id="'+p.id+'">retirer</button>'
+        + '</div></div>';
+    }).join('');
+  }
+
+  document.getElementById('c-alive').textContent=alive.length;
+  document.getElementById('c-dead').textContent=dead.length;
+  document.getElementById('c-lives').textContent=alive.reduce(function(s,p){return s+p.lives},0);
+
+  if(alive.length===1 && dead.length>0){
+    document.getElementById('winner-name').textContent=alive[0].name;
+    document.getElementById('winner').classList.add('show');
+  }
+  save();
+}
+function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+
+// ---------- actions ----------
+function addPlayer(){
+  var inp=document.getElementById('new-name');
+  var name=inp.value.trim();
+  if(!name) return;
+  players.push({id:Date.now()+Math.random(), name:name, lives:MAX_LIVES, pass:false});
+  inp.value=''; inp.focus();
+  render();
+}
+document.getElementById('btn-add').addEventListener('click', addPlayer);
+document.getElementById('new-name').addEventListener('keydown', function(e){ if(e.key==='Enter') addPlayer(); });
+
+document.getElementById('board').addEventListener('click', function(e){
+  var btn=e.target.closest('button'); if(!btn) return;
+  var id=parseFloat(btn.dataset.id);
+  var p=players.find(function(x){return x.id===id}); if(!p) return;
+  var act=btn.dataset.act;
+  if(act==='minus' && p.lives>0){ p.lives--; render(p.lives>0?p.id:null); }
+  else if(act==='plus' && p.lives<MAX_LIVES){ p.lives++; render(); }
+  else if(act==='revive'){
+    var n=prompt('Match de rattrapage (Pass Mois) — avec combien de vies '+p.name+' revient-il ? (1 à '+MAX_LIVES+')','5');
+    if(n===null) return;
+    n=parseInt(n,10);
+    if(isNaN(n)||n<1) n=1; if(n>MAX_LIVES) n=MAX_LIVES;
+    p.lives=n; p.pass=true; render(p.id);
+  }
+  else if(act==='remove'){
+    if(confirm('Retirer '+p.name+' du tableau ?')){ players=players.filter(function(x){return x.id!==id}); render(); }
+  }
+});
+
+// ---------- contrôles ----------
+document.getElementById('btn-reset').addEventListener('click', function(){
+  if(confirm('Réinitialiser tout le tournoi ? (tous les joueurs et scores seront effacés)')){ players=[]; render(); }
+});
+document.getElementById('btn-fs').addEventListener('click', function(){
+  if(!document.fullscreenElement){ document.documentElement.requestFullscreen && document.documentElement.requestFullscreen(); }
+  else { document.exitFullscreen(); }
+});
+document.addEventListener('fullscreenchange', function(){
+  document.body.classList.toggle('tv', !!document.fullscreenElement);
+});
+document.getElementById('btn-setup').addEventListener('click', function(){
+  var bar=document.getElementById('addbar');
+  bar.style.display = bar.style.display==='none' ? 'flex' : 'none';
+});
+document.getElementById('btn-close-winner').addEventListener('click', function(){
+  document.getElementById('winner').classList.remove('show');
+});
+
+load(); render();
+</script>
+</body>
+</html>

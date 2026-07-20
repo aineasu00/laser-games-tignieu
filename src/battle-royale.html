@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Battle Royale Laser — Première édition gratuite · Laser Games Tignieu</title>
+<meta name="description" content="Le premier Battle Royale laser de Tignieu : tournoi gratuit, 10 vies, dernier survivant. Jeudi de 19h à 23h. Inscription obligatoire, places limitées. Match de rattrapage avec le Pass Mois à 10€.">
+<link rel="canonical" href="https://lasergamestignieu.com/battle-royale">
+<meta property="og:type" content="website">
+<meta property="og:title" content="BATTLE ROYALE LASER — Première édition · GRATUIT">
+<meta property="og:description" content="10 vies. Un labyrinthe de 400 m². Un seul survivant. Jeudi 19h–23h à Tignieu — tournoi gratuit sur inscription, places limitées.">
+<meta property="og:image" content="https://d8j0ntlcm91z4.cloudfront.net/user_3BhKyG6aqunct5eu5AhqQ2xMWu6/hf_20260706_134700_6eb3bdaa-673b-4994-94b3-ec491307d03b.png">
+<meta property="og:url" content="https://lasergamestignieu.com/battle-royale">
+<meta property="og:locale" content="fr_FR">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230B0E13'/%3E%3Ccircle cx='16' cy='16' r='10' fill='none' stroke='%23FF5A2D' stroke-width='2.5'/%3E%3Ccircle cx='16' cy='16' r='3.5' fill='%234FE3C1'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#0B0E13;
+    --hull:#161B22;
+    --hull-light:#232B36;
+    --line:#2C3542;
+    --biolume:#4FE3C1;
+    --laser:#4EA8FF;
+    --alert:#FF5A2D;
+    --hazard:#F2C40F;
+    --sand:#EDE9DF;
+    --dim:#9AA3B0;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{overflow-x:clip}
+  body{
+    background:var(--void);color:var(--sand);
+    font-family:'Manrope',sans-serif;font-size:17px;line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:calc(64px + env(safe-area-inset-bottom));
+  }
+  img,video{display:block;max-width:100%;height:auto}
+  a{color:inherit}
+
+  .hazard{height:8px;background:repeating-linear-gradient(-45deg,var(--hazard) 0 16px,#101318 16px 32px)}
+
+  /* ---------- header ---------- */
+  header{position:sticky;top:0;z-index:50;background:rgba(11,14,19,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:12px 20px;gap:12px}
+  .brand{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:1.05rem;letter-spacing:.06em;text-decoration:none;color:var(--laser);white-space:nowrap}
+  .brand span{color:var(--alert)}
+  .btn{display:inline-block;font-family:'Chakra Petch',sans-serif;font-weight:700;letter-spacing:.08em;text-decoration:none;text-align:center;background:var(--alert);color:#120602;padding:13px 24px;border:none;cursor:pointer;font-size:1rem;clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);transition:transform .15s ease,background .2s}
+  .btn:hover,.btn:focus-visible{background:#ff7046;transform:translateY(-1px)}
+  .btn-ghost{background:transparent;color:var(--biolume);border:1px solid var(--biolume)}
+  .btn-ghost:hover,.btn-ghost:focus-visible{background:rgba(79,227,193,.1)}
+  .header-cta{padding:9px 16px;font-size:.85rem}
+
+  /* ---------- hero ---------- */
+  .hero{position:relative;min-height:92vh;min-height:92svh;display:flex;align-items:flex-end;overflow:hidden}
+  .hero video,.hero-fallback{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,var(--void) 4%,rgba(11,14,19,.62) 45%,rgba(11,14,19,.2) 78%)}
+  .hero-content{position:relative;z-index:2;max-width:1100px;margin:0 auto;width:100%;padding:0 20px 52px}
+  .event-band{display:inline-flex;align-items:center;gap:10px;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:.8rem;letter-spacing:.18em;text-transform:uppercase;color:#120602;background:var(--hazard);padding:7px 14px;margin-bottom:20px;clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%)}
+  .free-tag{display:inline-block;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:.8rem;letter-spacing:.18em;text-transform:uppercase;color:#04110C;background:var(--biolume);padding:7px 14px;margin-bottom:20px;margin-left:8px;clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%)}
+  h1{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:clamp(2.4rem,8vw,4.8rem);line-height:1.02;letter-spacing:-.01em;text-shadow:0 2px 30px rgba(0,0,0,.6);text-transform:uppercase}
+  h1 .alt{color:var(--alert)}
+  .hero p{max-width:52ch;margin:18px 0 26px;font-size:clamp(1rem,2.2vw,1.2rem);text-shadow:0 1px 16px rgba(0,0,0,.7)}
+  .hero-actions{display:flex;flex-wrap:wrap;gap:14px}
+
+  /* ---------- countdown ---------- */
+  .countdown{display:flex;gap:14px;margin-top:28px}
+  .cd-box{background:rgba(11,14,19,.7);border:1px solid var(--line);padding:10px 0;width:74px;text-align:center;clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px)}
+  .cd-box b{display:block;font-family:'Chakra Petch',sans-serif;font-size:1.7rem;font-weight:700;color:var(--hazard);line-height:1.1}
+  .cd-box span{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+
+  /* ---------- sections ---------- */
+  section{padding:56px 20px}
+  .wrap{max-width:1100px;margin:0 auto}
+  .eyebrow{font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:.78rem;letter-spacing:.22em;text-transform:uppercase;color:var(--biolume);display:flex;align-items:center;gap:12px;margin-bottom:16px}
+  .eyebrow::before{content:"";width:26px;height:2px;background:var(--biolume)}
+  h2{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:clamp(1.7rem,4.5vw,2.6rem);line-height:1.12;margin-bottom:18px}
+  .lede{color:var(--dim);max-width:60ch;font-size:1.05rem}
+
+  /* ---------- règles ---------- */
+  .rules{display:grid;gap:20px;margin-top:40px}
+  .rule-card{background:var(--hull);border:1px solid var(--line);padding:26px;clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px)}
+  .rule-num{font-family:'Chakra Petch',sans-serif;font-size:2.4rem;font-weight:700;color:var(--alert);line-height:1;margin-bottom:12px}
+  .rule-card h3{font-family:'Chakra Petch',sans-serif;font-size:1.05rem;font-weight:600;margin-bottom:8px}
+  .rule-card p{color:var(--dim);font-size:.97rem}
+  .rule-card .lives{font-family:'Chakra Petch',sans-serif;color:var(--hazard);letter-spacing:2px;font-size:.9rem;margin-top:10px}
+
+  /* ---------- pass ---------- */
+  .pass-panel{margin-top:44px;background:linear-gradient(135deg,var(--hull) 0%,#1d2530 100%);border:1px solid rgba(79,227,193,.45);padding:30px 26px;clip-path:polygon(16px 0,100% 0,100% calc(100% - 16px),calc(100% - 16px) 100%,0 100%,0 16px);display:grid;gap:18px}
+  .pass-panel .tag{display:inline-block;width:fit-content;font-family:'Chakra Petch',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.16em;color:#04110C;background:var(--biolume);padding:4px 10px}
+  .pass-panel h3{font-family:'Chakra Petch',sans-serif;font-size:1.4rem;font-weight:700}
+  .pass-price{font-family:'Chakra Petch',sans-serif;font-size:2.4rem;font-weight:700;color:var(--biolume)}
+  .pass-price small{font-size:1rem;color:var(--dim);font-weight:400}
+
+  /* ---------- programme ---------- */
+  .timeline{margin-top:36px;border-left:2px solid var(--line);padding-left:26px;display:grid;gap:26px;max-width:640px}
+  .tl-item{position:relative}
+  .tl-item::before{content:"";position:absolute;left:-33px;top:6px;width:12px;height:12px;background:var(--alert);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
+  .tl-item .time{font-family:'Chakra Petch',sans-serif;font-weight:700;color:var(--hazard);font-size:1.05rem}
+  .tl-item p{color:var(--dim);font-size:.97rem}
+
+  /* ---------- formulaire ---------- */
+  .form-section{background:var(--hull);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  form{margin-top:34px;display:grid;gap:18px;max-width:560px}
+  label{font-family:'Chakra Petch',sans-serif;font-size:.8rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--biolume);display:block;margin-bottom:7px}
+  input,select{width:100%;background:var(--void);border:1px solid var(--line);color:var(--sand);font-family:'Manrope',sans-serif;font-size:1rem;padding:14px 16px;border-radius:0;-webkit-appearance:none;appearance:none}
+  input:focus,select:focus{outline:2px solid var(--biolume);outline-offset:0;border-color:var(--biolume)}
+  select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234FE3C1' stroke-width='2' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center}
+  .form-note{font-size:.88rem;color:var(--dim)}
+  .form-success{display:none;margin-top:30px;background:rgba(79,227,193,.08);border:1px solid var(--biolume);padding:22px;color:var(--sand)}
+
+  /* ---------- infos ---------- */
+  .infos-grid{display:grid;gap:32px;margin-top:36px}
+  .info-block h3{font-family:'Chakra Petch',sans-serif;font-size:.85rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--biolume);margin-bottom:10px}
+  .info-block a{color:var(--sand);text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:4px}
+
+  footer{padding:30px 20px 40px;text-align:center;color:var(--dim);font-size:.85rem;border-top:1px solid var(--line)}
+  footer .sig{font-family:'Chakra Petch',sans-serif;letter-spacing:.1em;color:var(--laser);margin-bottom:6px}
+  footer a{color:var(--dim)}
+
+  /* ---------- barre CTA mobile ---------- */
+  .call-bar{position:fixed;bottom:0;left:0;right:0;z-index:60;display:flex;background:var(--alert);border-top:2px solid #120602;padding-bottom:env(safe-area-inset-bottom)}
+  .call-bar a{flex:1;text-align:center;padding:16px 10px;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:1rem;letter-spacing:.06em;color:#120602;text-decoration:none}
+
+  @media(min-width:820px){
+    body{padding-bottom:0}
+    .call-bar{display:none}
+    section{padding:88px 20px}
+    .rules{grid-template-columns:repeat(3,1fr)}
+    .pass-panel{grid-template-columns:1fr auto;align-items:center}
+    .infos-grid{grid-template-columns:repeat(3,1fr)}
+  }
+  @media(max-width:480px){
+    .hero-actions{flex-direction:column}
+    .hero-actions .btn{width:100%;padding:16px 24px;font-size:1.02rem}
+    .brand{font-size:.95rem}
+    .header-cta{display:none}
+    .header-inner{padding:12px 16px}
+    .event-band,.free-tag{font-size:.68rem;letter-spacing:.1em;white-space:normal;line-height:1.5}
+    .free-tag{margin-left:0}
+    .countdown{gap:8px}
+    .cd-box{width:64px}
+  }
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
+  :focus-visible{outline:2px solid var(--biolume);outline-offset:3px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hazard"></div>
+  <div class="header-inner">
+    <a class="brand" href="/">LASER GAMES <span>TIGNIEU</span></a>
+    <a class="btn header-cta" href="#inscription">Je m'inscris</a>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="top" style="padding:0">
+  <img class="hero-fallback" src="https://d8j0ntlcm91z4.cloudfront.net/user_3BhKyG6aqunct5eu5AhqQ2xMWu6/hf_20260706_134700_6eb3bdaa-673b-4994-94b3-ec491307d03b.png" alt="Le labyrinthe laser aux décors cosmiques peints, théâtre du Battle Royale" fetchpriority="high">
+  <video autoplay muted loop playsinline preload="metadata" poster="https://d8j0ntlcm91z4.cloudfront.net/user_3BhKyG6aqunct5eu5AhqQ2xMWu6/hf_20260706_134700_6eb3bdaa-673b-4994-94b3-ec491307d03b.png" aria-hidden="true">
+    <source src="https://d8j0ntlcm91z4.cloudfront.net/user_3BhKyG6aqunct5eu5AhqQ2xMWu6/hf_20260706_134844_674a24db-e255-4829-a48f-4e6f14e3b3f1.mp4" type="video/mp4">
+  </video>
+  <div class="hero-content">
+    <span class="event-band" id="event-date-band">Jeudi 16 juillet · 19 h – 23 h</span><span class="free-tag">100 % gratuit</span>
+    <h1>Battle<br>Royale <span class="alt">Laser</span></h1>
+    <p>Première édition. 400 m² de labyrinthe, 10 vies chacun, et un seul survivant à la fin de la nuit. Tournoi gratuit — mais l'inscription est obligatoire et les places sont limitées.</p>
+    <div class="hero-actions">
+      <a class="btn" href="#inscription">Réserver ma place gratuite</a>
+      <a class="btn btn-ghost" href="#regles">Voir les règles</a>
+    </div>
+    <div class="countdown" id="countdown" aria-label="Compte à rebours avant l'événement">
+      <div class="cd-box"><b id="cd-d">–</b><span>jours</span></div>
+      <div class="cd-box"><b id="cd-h">–</b><span>heures</span></div>
+      <div class="cd-box"><b id="cd-m">–</b><span>min</span></div>
+      <div class="cd-box"><b id="cd-s">–</b><span>sec</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="hazard" role="presentation"></div>
+
+<!-- ================= RÈGLES ================= -->
+<section id="regles">
+  <div class="wrap">
+    <p class="eyebrow">Protocole de combat</p>
+    <h2>Les règles. Simples. Impitoyables.</h2>
+    <p class="lede">Pas besoin d'être un vétéran du laser : le format est simple à comprendre, et chaque vie compte.</p>
+    <div class="rules">
+      <div class="rule-card">
+        <div class="rule-num">01</div>
+        <h3>10 vies. Pas une de plus.</h3>
+        <p>Chaque joueur entre dans le tournoi avec un capital de 10 vies. Chaque élimination en match vous en coûte. À zéro, vous sortez définitivement du tournoi.</p>
+        <div class="lives" aria-hidden="true">♥♥♥♥♥♥♥♥♥♥</div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-num">02</div>
+        <h3>Dernier debout.</h3>
+        <p>Les matchs s'enchaînent dans le labyrinthe de 19 h à 23 h. Les survivants continuent, les éliminés regardent. Le dernier joueur en vie remporte la première édition.</p>
+      </div>
+      <div class="rule-card">
+        <div class="rule-num">03</div>
+        <h3>Gratuit, sur inscription.</h3>
+        <p>L'entrée au tournoi est 100 % gratuite en mode Battle Royale. Seule condition : s'inscrire avant l'événement — le nombre de combattants est limité par session.</p>
+      </div>
+    </div>
+
+    <div class="pass-panel">
+      <div>
+        <span class="tag">Seconde chance</span>
+        <h3 style="margin-top:12px">Éliminé ? Le Pass Mois vous ressuscite.</h3>
+        <p style="color:var(--dim);margin-top:8px">Les détenteurs du Pass Mois ont droit à un match de rattrapage pour revenir dans le tournoi après leur élimination. Le Pass se prend sur place, et il vous sert ensuite tout le mois.</p>
+      </div>
+      <div class="pass-price">10 € <small>/ mois</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROGRAMME ================= -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <p class="eyebrow">Plan de bataille</p>
+    <h2>Le déroulé de la soirée.</h2>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="time">19 h 00 — Ouverture de l'airlock</div>
+        <p>Pointage des inscrits, attribution des vies, briefing des combattants et prise en main des phasers.</p>
+      </div>
+      <div class="tl-item">
+        <div class="time">19 h 30 — Premiers affrontements</div>
+        <p>Les matchs Battle Royale s'enchaînent dans le labyrinthe. Chaque élimination coûte une vie sur votre capital de 10.</p>
+      </div>
+      <div class="tl-item">
+        <div class="time">En continu — Matchs de rattrapage</div>
+        <p>Les éliminés détenteurs du Pass Mois retentent leur chance. Les autres profitent de l'arcade, du billard et du bar pour suivre la bataille.</p>
+      </div>
+      <div class="tl-item">
+        <div class="time">23 h 00 — Le dernier survivant</div>
+        <p>Fin des hostilités : le dernier combattant en vie est sacré vainqueur de la toute première édition.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="hazard" role="presentation"></div>
+
+<!-- ================= INSCRIPTION ================= -->
+<section class="form-section" id="inscription">
+  <div class="wrap">
+    <p class="eyebrow">Engagement</p>
+    <h2>Réservez votre place. Gratuitement.</h2>
+    <p class="lede">Inscription obligatoire — le nombre de places est limité par le matériel de combat disponible. Premier inscrit, premier équipé.</p>
+    <form name="battle-royale" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="#inscription">
+      <input type="hidden" name="form-name" value="battle-royale">
+      <p style="display:none"><label>Ne pas remplir : <input name="bot-field"></label></p>
+      <div>
+        <label for="f-nom">Prénom et nom</label>
+        <input id="f-nom" name="nom" type="text" required autocomplete="name" placeholder="Ex : Alex Durand">
+      </div>
+      <div>
+        <label for="f-tel">Téléphone</label>
+        <input id="f-tel" name="telephone" type="tel" required autocomplete="tel" placeholder="06 XX XX XX XX">
+      </div>
+      <div>
+        <label for="f-email">Email</label>
+        <input id="f-email" name="email" type="email" required autocomplete="email" placeholder="vous@exemple.fr">
+      </div>
+      <div>
+        <label for="f-nb">Nombre de combattants</label>
+        <select id="f-nb" name="nombre_joueurs" required>
+          <option value="1">1 joueur</option>
+          <option value="2">2 joueurs</option>
+          <option value="3">3 joueurs</option>
+          <option value="4">4 joueurs</option>
+          <option value="5+">5 joueurs ou plus</option>
+        </select>
+      </div>
+      <button class="btn" type="submit">Confirmer mon inscription gratuite</button>
+      <p class="form-note">Vos coordonnées servent uniquement à confirmer votre place et à vous prévenir en cas d'imprévu. Une question ? <a href="tel:+33607728164" style="color:var(--biolume)">06 07 72 81 64</a></p>
+    </form>
+  </div>
+</section>
+
+<!-- ================= INFOS ================= -->
+<section id="infos">
+  <div class="wrap">
+    <p class="eyebrow">Coordonnées d'atterrissage</p>
+    <h2>Le champ de bataille.</h2>
+    <div class="infos-grid">
+      <div class="info-block">
+        <h3>Quand</h3>
+        <p id="event-date-infos">Jeudi 16 juillet<br>19 h – 23 h</p>
+      </div>
+      <div class="info-block">
+        <h3>Où</h3>
+        <p>Laser Games Tignieu<br>60 Route de Crémieu<br>38230 Tignieu-Jameyzieu</p>
+        <p style="margin-top:8px"><a href="https://www.google.com/maps/search/?api=1&query=Laser+Games+60+Route+de+Cr%C3%A9mieu+38230+Tignieu-Jameyzieu" rel="noopener">Ouvrir dans Google Maps</a></p>
+      </div>
+      <div class="info-block">
+        <h3>Contact</h3>
+        <p><a href="tel:+33607728164">06 07 72 81 64</a></p>
+        <p style="color:var(--dim);margin-top:8px">Pour toute question sur le tournoi ou le Pass Mois.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="hazard" role="presentation"></div>
+
+<footer>
+  <p class="sig">LASER GAMES TIGNIEU</p>
+  <p>Battle Royale Laser — Première édition · <a href="/">Retour au site principal</a></p>
+</footer>
+
+<div class="call-bar">
+  <a href="#inscription">⚡ Je réserve ma place gratuite</a>
+</div>
+
+<script>
+  // ====== DATE DE L'ÉVÉNEMENT — À MODIFIER ICI ======
+  var EVENT_DATE = new Date('2026-07-16T19:00:00+02:00');
+  // ===================================================
+
+  (function(){
+    var d=document.getElementById('cd-d'),h=document.getElementById('cd-h'),
+        m=document.getElementById('cd-m'),s=document.getElementById('cd-s');
+    function tick(){
+      var diff=EVENT_DATE-new Date();
+      if(diff<=0){document.getElementById('countdown').innerHTML='<div class="cd-box" style="width:auto;padding:10px 18px"><b style="font-size:1.1rem">C\'EST CE SOIR !</b></div>';return}
+      d.textContent=Math.floor(diff/864e5);
+      h.textContent=Math.floor(diff%864e5/36e5);
+      m.textContent=Math.floor(diff%36e5/6e4);
+      s.textContent=Math.floor(diff%6e4/1e3);
+      setTimeout(tick,1000);
+    }
+    tick();
+  })();
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll('video').forEach(v => { v.removeAttribute('autoplay'); v.pause(); });
+  }
+</script>
+</body>
+</html>
