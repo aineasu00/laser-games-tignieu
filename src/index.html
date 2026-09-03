@@ -31,7 +31,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Laser Game à Tignieu-Jameyzieu (38) — Laser Games Tignieu · Labyrinthe 400 m² & Arcade rétro</title>
-<meta name="description" content="Laser game familial à Tignieu-Jameyzieu, à 30 min de Lyon : labyrinthe de 400 m², 3 ambiances, arcade rétro, billard, fléchettes, anniversaires enfants. Noté 4,8/5 sur Google. Ouvert tous les jours 10h–20h cet été. ☎ 06 07 72 81 64">
+<meta name="description" content="Laser game familial à Tignieu-Jameyzieu, à 30 min de Lyon : labyrinthe de 400 m², 3 ambiances, arcade rétro, billard, fléchettes et anniversaires enfants. Horaires hors vacances scolaires en ligne. ☎ 06 07 72 81 64">
 <meta name="keywords" content="laser game, laser game Tignieu, laser game Lyon, anniversaire enfant, arcade rétro, billard, fléchettes, activité familiale, Nord-Isère">
 <meta name="author" content="Laser Games Tignieu">
 <meta name="robots" content="index, follow">
@@ -41,7 +41,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Laser Games Tignieu">
 <meta property="og:title" content="Laser Games Tignieu — Un vaisseau s'est écrasé à Tignieu.">
-<meta property="og:description" content="Laser game dans une jungle extraterrestre, arcade rétro, anniversaires. Noté 4,8/5 (346 avis). Ouvert tous les jours 10h–20h cet été.">
+<meta property="og:description" content="Laser game dans une jungle extraterrestre, arcade rétro et anniversaires. Noté 4,8/5 (346 avis). Consultez nos horaires hors vacances scolaires.">
 <meta property="og:image" content="https://d8j0ntlcm91z4.cloudfront.net/user_3BhKyG6aqunct5eu5AhqQ2xMWu6/hf_20260706_140304_ec7765c7-1e4b-49e6-9cfd-798d5edf4669.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -49,7 +49,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <meta property="og:locale" content="fr_FR">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Laser Games Tignieu — Un vaisseau s'est écrasé à Tignieu.">
-<meta name="twitter:description" content="Laser game dans une jungle extraterrestre, arcade rétro, anniversaires. Noté 4,8/5 (346 avis). Ouvert tous les jours 10h–20h cet été.">
+<meta name="twitter:description" content="Laser game dans une jungle extraterrestre, arcade rétro et anniversaires. Noté 4,8/5 (346 avis). Consultez nos horaires hors vacances scolaires.">
 <meta name="twitter:image" content="https://d8j0ntlcm91z4.cloudfront.net/user_3BhKyG6aqunct5eu5AhqQ2xMWu6/hf_20260706_140304_ec7765c7-1e4b-49e6-9cfd-798d5edf4669.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230B0E13'/%3E%3Ccircle cx='16' cy='16' r='10' fill='none' stroke='%23FF5A2D' stroke-width='2.5'/%3E%3Ccircle cx='16' cy='16' r='3.5' fill='%234FE3C1'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -78,12 +78,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     "longitude": "5.1814"
   },
   "hasMap": "https://www.google.com/maps/search/?api=1&query=Laser+Games+60+Route+de+Cr%C3%A9mieu+38230+Tignieu-Jameyzieu",
-  "openingHoursSpecification": {
-    "@type": "OpeningHoursSpecification",
-    "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
-    "opens": "10:00",
-    "closes": "20:00"
-  },
+  "openingHoursSpecification": [
+    {"@type":"OpeningHoursSpecification","dayOfWeek":"Wednesday","opens":"10:30","closes":"12:00"},
+    {"@type":"OpeningHoursSpecification","dayOfWeek":"Wednesday","opens":"13:30","closes":"20:00"},
+    {"@type":"OpeningHoursSpecification","dayOfWeek":"Thursday","opens":"17:00","closes":"22:00"},
+    {"@type":"OpeningHoursSpecification","dayOfWeek":"Friday","opens":"17:00","closes":"22:00"},
+    {"@type":"OpeningHoursSpecification","dayOfWeek":"Saturday","opens":"10:30","closes":"12:00"},
+    {"@type":"OpeningHoursSpecification","dayOfWeek":"Saturday","opens":"13:30","closes":"22:00"},
+    {"@type":"OpeningHoursSpecification","dayOfWeek":"Sunday","opens":"10:30","closes":"12:00"},
+    {"@type":"OpeningHoursSpecification","dayOfWeek":"Sunday","opens":"13:30","closes":"20:00"}
+  ],
   "amenityFeature": [
     {"@type":"LocationFeatureSpecification","name":"Accès PMR","value":true},
     {"@type":"LocationFeatureSpecification","name":"Bar sur place","value":true},
@@ -214,6 +218,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .info-block a{color:var(--sand);text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:4px}
   .info-block a:hover{text-decoration-color:var(--biolume)}
   .hours{font-family:'Chakra Petch',sans-serif;font-size:1.35rem;font-weight:700}
+  .opening-hours{display:grid;gap:8px;margin-top:14px}
+  .opening-hours div{display:grid;grid-template-columns:minmax(90px,.7fr) 1.3fr;gap:14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .opening-hours dt{font-family:'Chakra Petch',sans-serif;font-weight:700;color:var(--sand)}
+  .opening-hours dd{color:var(--dim)}
   .big-phone{font-family:'Chakra Petch',sans-serif;font-size:clamp(1.5rem,5vw,2.3rem);font-weight:700;color:var(--alert);text-decoration:none}
   .big-phone:hover{color:#ff7046}
 
@@ -319,7 +327,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <source src="https://d8j0ntlcm91z4.cloudfront.net/user_3BhKyG6aqunct5eu5AhqQ2xMWu6/hf_20260706_140410_53550fad-e9b9-4157-b452-3ae29a0a077a.mp4" type="video/mp4">
   </video>
   <div class="hero-content">
-    <span class="summer-band">Été · ouvert tous les jours · 10 h – 20 h</span>
+    <span class="summer-band">Hors vacances scolaires · horaires à jour</span>
     <h1>Un vaisseau s'est écrasé à Tignieu.</h1>
     <p>Derrière l'airlock : un labyrinthe laser de 400 m² aux allures de jungle extraterrestre, une arcade rétro, un billard — et des souvenirs de vacances à fabriquer en famille, à 30 minutes de Lyon.</p>
     <div class="hero-actions">
@@ -512,9 +520,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <h2>Nous trouver, nous appeler.</h2>
     <div class="infos-grid">
       <div class="info-block">
-        <h3>Horaires d'été</h3>
-        <p class="hours">10 h – 20 h</p>
-        <p style="color:var(--dim)">Tous les jours, pendant toutes les vacances.</p>
+        <h3>Horaires hors vacances scolaires</h3>
+        <dl class="opening-hours">
+          <div><dt>Lundi</dt><dd>Fermé</dd></div>
+          <div><dt>Mardi</dt><dd>Fermé</dd></div>
+          <div><dt>Mercredi</dt><dd>10 h 30 – 12 h · 13 h 30 – 20 h</dd></div>
+          <div><dt>Jeudi</dt><dd>17 h – 22 h</dd></div>
+          <div><dt>Vendredi</dt><dd>17 h – 22 h</dd></div>
+          <div><dt>Samedi</dt><dd>10 h 30 – 12 h · 13 h 30 – 22 h</dd></div>
+          <div><dt>Dimanche</dt><dd>10 h 30 – 12 h · 13 h 30 – 20 h</dd></div>
+        </dl>
       </div>
       <div class="info-block">
         <h3>Adresse</h3>

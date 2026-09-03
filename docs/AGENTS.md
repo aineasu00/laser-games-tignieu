@@ -12,7 +12,7 @@ Le site doit générer des réservations par téléphone, des inscriptions à l'
 - **Téléphone** : 06 07 72 81 64
 - **Activité** : Laser game familial, arcade rétro, billard, fléchettes, anniversaires
 - **Surface** : 400 m² de labyrinthe sur 3 ambiances
-- **Horaires d'été** : 10h – 20h, tous les jours
+- **Horaires hors vacances scolaires** : lundi et mardi fermés ; mercredi 10h30–12h et 13h30–20h ; jeudi et vendredi 17h–22h ; samedi 10h30–12h et 13h30–22h ; dimanche 10h30–12h et 13h30–20h
 - **Note Google** : 4,8/5 (346 avis)
 - **Concurrence locale** : activités à Tignieu, Lyon à 30 min
 
