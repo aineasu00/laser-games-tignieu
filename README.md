@@ -44,10 +44,12 @@ Déploiement continu activé via GitHub → Netlify.
 
 ## Réservation anniversaire directe
 
-Le parcours `/reservation-anniversaire.html` interroge deux Netlify Functions :
+Le parcours `/reservation-anniversaire.html` affiche le calendrier dès l’entrée. L’âge, l’effectif et la formule le personnalisent sur la même page. Les filtres mercredi/vendredi/week-end, les jours complets et le prix estimé viennent du serveur. Le jeudi est exclu des anniversaires ; Commandant est à 15 € par enfant le vendredi après l’école (goûter, boissons et friandises inclus).
 
-- `GET /api/birthday-availability` calcule les créneaux par rotations de 30 minutes sans exposer les événements privés ;
-- `POST /api/book-birthday` revérifie le planning, crée l’événement dans Google Agenda et ajoute la ligne au registre Google Sheets.
+Deux Netlify Functions :
+
+- `GET /api/birthday-availability?month=YYYY-MM&formula=commandant&age=8&children=6` lit un mois en une requête Google paginée, puis renvoie uniquement les statuts des jours, heures et devis publics. `date=YYYY-MM-DD` reste disponible pour une seule date. Aucun événement privé n’est retourné au navigateur.
+- `POST /api/book-birthday` revérifie le créneau et le prix, puis renvoie une référence de simulation stable. Il ne conserve pas les coordonnées du test. **Les écritures en production sont désactivées** jusqu’à validation de la gestion transactionnelle de capacité, du matériel, des tables et de la synchronisation Google/Sheets. L’ancien verrou non atomique Blobs a été retiré.
 
 Variables Netlify requises, à enregistrer dans l’interface Netlify et jamais dans Git :
 
@@ -56,8 +58,14 @@ Variables Netlify requises, à enregistrer dans l’interface Netlify et jamais 
 - `GOOGLE_CALENDAR_ID` (facultatif, valeur par défaut : `lasergames38@gmail.com`) ;
 - `GOOGLE_SHEET_ID` (facultatif, le registre anniversaire actuel est utilisé par défaut).
 
-Le compte de service Google doit avoir accès en écriture à l’agenda et au Sheet. En local, utiliser `netlify dev`. Les réservations directes sont limitées aux créneaux vides ou aux événements explicitement marqués `Partage : autorisé` ; les autres cas restent des demandes manuelles.
+Pour tester uniquement la lecture, partager l’agenda `lasergames38@gmail.com` avec le compte de service avec le droit de consulter tous les détails. Pas besoin d’ouvrir publiquement l’agenda, ni de partager le Sheet à ce stade. Le serveur utilise le périmètre Google Calendar en lecture seule. En local, utiliser `netlify dev`.
 
-Les Deploy Previews fonctionnent volontairement en simulation : elles utilisent un store Blobs propre au déploiement et ne créent ni événement Agenda ni ligne Sheets. La variable `BOOKING_PREVIEW_READ_CALENDAR=true` permet uniquement de tester la lecture du planning réel dans une préversion ; les écritures restent bloquées hors production.
+Les Deploy Previews utilisent par défaut un calendrier explicitement fictif (dont des journées complètes), sans données clients. La variable `BOOKING_PREVIEW_READ_CALENDAR=true`, avec les deux identifiants Google, active la lecture réelle dans la préversion ; la soumission reste une simulation. Si Google échoue, le serveur renvoie 503 et les jours restent non réservables : il ne revient jamais silencieusement à un agenda vide.
+
+Le navigateur actualise le mois toutes les 60 secondes lorsqu’il est visible et au clic sur « Actualiser ». La validation relit l’agenda. Les notifications push Google ne sont pas encore installées ; ne pas annoncer une synchronisation instantanée.
+
+Configuration restant à terminer : accès serveur Google, règles de vacances/jours fériés et limites horaires de l’offre vendredi, capacité par type d’équipement, tables et encadrement, stockage transactionnel anti-doublon et reprise des synchronisations partielles. Les anciennes descriptions d’agenda doivent être vérifiées avant ouverture des réservations réelles.
+
+Vérification de configuration le 8 septembre 2026 : identifiants `GOOGLE_SERVICE_ACCOUNT_EMAIL` et `GOOGLE_PRIVATE_KEY` absents de Netlify. Le connecteur Google de Codex ne constitue pas une authentification utilisable par le site.
 
 Lancer les tests métier sans dépendance externe avec `node --test tests/*.test.mjs`.

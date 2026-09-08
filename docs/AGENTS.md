@@ -62,3 +62,13 @@ Le site doit générer des réservations par téléphone, des inscriptions à l'
 - Autorité opérationnelle : Google Agenda `lasergames38@gmail.com`. Suivi commercial : registre Google Sheets anniversaire.
 - La réservation directe exige l’accord sur le partage éventuel avec un groupe d’âge compatible et confirme uniquement un créneau encore sûr après revérification serveur.
 - Aucun paiement en ligne ni acompte : règlement sur place après l’anniversaire selon le nombre d’enfants présents.
+
+### État de la préversion au 8 septembre 2026
+
+- Calendrier en première étape, groupe et formule dans le même écran ; coordonnées ensuite.
+- Mercredi proposé. Aucun anniversaire le jeudi. Commandant complète à 15 € par enfant le vendredi après l’école, contre 20 € au tarif habituel ; Explorateur reste à 16 €.
+- Présenter 20 minutes de jeu + environ 10 minutes de préparation, jamais 30 minutes de jeu.
+- Disponibilités mensuelles calculées par le serveur. Google peut être lu depuis la préversion avec un compte de service et `BOOKING_PREVIEW_READ_CALENDAR=true`.
+- Le mode fictif est clairement signalé. Une panne Google ne doit pas ouvrir artificiellement tous les créneaux.
+- Réservations réelles désactivées dans le serveur et l’interface. La simulation ne stocke pas de coordonnées, n’envoie pas d’e-mail et ne déclenche aucune conversion.
+- Il reste à valider la gestion transactionnelle des places, le matériel par type, l’accueil et la synchronisation commerciale avant d’activer des écritures réelles. Ne jamais utiliser un verrou Blobs non atomique comme garantie anti-surréservation.

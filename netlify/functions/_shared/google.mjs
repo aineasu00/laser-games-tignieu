@@ -1,4 +1,5 @@
-import { createSign } from "node:crypto";
+import { createSign, createHash } from "node:crypto";
+import { shiftDate } from "./booking-rules.mjs";
 
 const CALENDAR_ID = "lasergames38@gmail.com";
 const SHEET_ID = "11O5vVGMv-X8T470FKd32e6zEqrKEbpJoCFftofFCegs";
@@ -19,12 +20,12 @@ function base64url(value) {
   return Buffer.from(input).toString("base64url");
 }
 
-async function accessToken() {
+async function accessToken(scope = GOOGLE_SCOPE) {
   const issuedAt = Math.floor(Date.now() / 1000);
   const header = base64url({ alg: "RS256", typ: "JWT" });
   const claims = base64url({
     iss: requiredEnv("GOOGLE_SERVICE_ACCOUNT_EMAIL"),
-    scope: GOOGLE_SCOPE,
+    scope,
     aud: GOOGLE_TOKEN_URL,
     iat: issuedAt,
     exp: issuedAt + 3600,
@@ -41,6 +42,7 @@ async function accessToken() {
       grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
       assertion: `${unsignedToken}.${signature}`,
     }),
+    signal: AbortSignal.timeout(10000),
   });
   const payload = await response.json();
   if (!response.ok || !payload.access_token) {
@@ -49,10 +51,11 @@ async function accessToken() {
   return payload.access_token;
 }
 
-async function googleRequest(url, options = {}) {
-  const token = await accessToken();
+async function googleRequest(url, options = {}, existingToken) {
+  const token = existingToken || await accessToken();
   const response = await fetch(url, {
     ...options,
+    signal: AbortSignal.timeout(10000),
     headers: {
       authorization: `Bearer ${token}`,
       ...(options.body ? { "content-type": "application/json" } : {}),
@@ -80,18 +83,26 @@ function parisDateTime(date, time) {
   return `${date}T${time}:00${sign}${hours}:${minutes}`;
 }
 
-export async function listEvents(date) {
+export async function listEvents(date, lastDate = date) {
   const calendarId = Netlify.env.get("GOOGLE_CALENDAR_ID") || CALENDAR_ID;
   const params = new URLSearchParams({
     timeMin: parisDateTime(date, "00:00"),
-    timeMax: parisDateTime(date, "23:59"),
+    timeMax: parisDateTime(shiftDate(lastDate, 1), "00:00"),
     singleEvents: "true",
     orderBy: "startTime",
     timeZone: "Europe/Paris",
+    maxResults: "2500",
   });
-  const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?${params}`;
-  const payload = await googleRequest(url);
-  return payload.items || [];
+  const token = await accessToken("https://www.googleapis.com/auth/calendar.readonly");
+  const items = [];
+  for (let page = 0; page < 10; page += 1) {
+    const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?${params}`;
+    const payload = await googleRequest(url, {}, token);
+    items.push(...(payload.items || []));
+    if (!payload.nextPageToken) return items;
+    params.set("pageToken", payload.nextPageToken);
+  }
+  throw new Error("Planning trop volumineux : vérification manuelle nécessaire.");
 }
 
 export async function createBirthdayEvent({ bookingId, data, formula, rotations }) {
@@ -114,7 +125,7 @@ export async function createBirthdayEvent({ bookingId, data, formula, rotations 
     "Partage : autorisé avec un groupe d’âge compatible",
     "Paiement : sur place après l’anniversaire, selon le nombre d’enfants réellement présents. Aucun acompte ni paiement en ligne.",
   ].join("\n");
-  const eventId = `web${bookingId.replace(/[^a-z0-9]/gi, "").toLowerCase()}`.slice(0, 64);
+  const eventId = `b${createHash("sha256").update(bookingId).digest("hex")}`;
   const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events`;
   return googleRequest(url, {
     method: "POST",
@@ -143,7 +154,7 @@ export async function appendBirthdayRow({ bookingId, data, formula, rotations, e
   ].join(" | ");
   const range = encodeURIComponent("Demandes!A:R");
   const params = new URLSearchParams({
-    valueInputOption: "USER_ENTERED",
+    valueInputOption: "RAW",
     insertDataOption: "INSERT_ROWS",
   });
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(spreadsheetId)}/values/${range}:append?${params}`;

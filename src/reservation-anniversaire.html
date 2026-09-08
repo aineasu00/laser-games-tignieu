@@ -60,12 +60,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </header>
 
 <main>
+  <div class="wrap"><p id="calendar-mode" class="mode-banner" role="status">Vérification du planning…</p></div>
   <section class="intro">
     <div class="wrap intro-grid">
       <div>
-        <p class="eyebrow">Réservation directe</p>
-        <h1>Sa mission commence ici.</h1>
-        <p class="lede">Choisissez la formule, la date et l’heure. Le planning est revérifié au moment de valider votre réservation.</p>
+        <p class="eyebrow">Un anniversaire, simplement</p>
+        <h1>Trouvez le jour de sa fête.</h1>
+        <p class="lede">Un créneau qui vous convient, un prix clair, aucun compte à créer.</p>
       </div>
       <div class="promise" aria-label="Informations importantes">
         <p><strong>Aucun paiement en ligne</strong></p>
@@ -77,18 +78,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <section class="booking-section">
     <div class="wrap">
       <ol class="steps" aria-label="Étapes de réservation">
-        <li class="active" data-step-indicator="1"><span>1</span> La mission</li>
-        <li data-step-indicator="2"><span>2</span> Date et heure</li>
-        <li data-step-indicator="3"><span>3</span> Vos coordonnées</li>
+        <li class="active" data-step-indicator="1"><span>1</span> Votre créneau</li>
+        <li data-step-indicator="2"><span>2</span> Vos coordonnées</li>
+        <li data-step-indicator="3"><span>3</span> Confirmation</li>
       </ol>
 
       <div id="booking-alert" class="alert" role="alert" hidden></div>
 
-      <section class="panel active" data-step="1" aria-labelledby="mission-title">
+      <section class="panel active settings-panel" data-step="1" aria-labelledby="mission-title">
         <div class="panel-heading">
-          <p class="kicker">Étape 1</p>
-          <h2 id="mission-title">Composez sa mission</h2>
-          <p>La réservation directe est disponible pour les groupes de 5 enfants minimum qui respectent la capacité de 17 équipements, adulte accompagnateur compris.</p>
+          <h2 id="mission-title">Un calendrier pour votre groupe</h2>
+          <p>Indiquez l’âge et l’effectif pour voir les créneaux adaptés.</p>
         </div>
 
         <fieldset class="formula-picker">
@@ -96,40 +96,54 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           <label class="formula-card selected">
             <input type="radio" name="formula" value="commandant" checked>
             <span class="formula-name">Commandant</span>
-            <strong>20 € <small>/ enfant</small></strong>
+            <strong><span id="commandant-price">20 €</span> <small>/ enfant</small></strong>
             <span>2 parties · présence de 1 h 45 à 2 h</span>
-            <span class="formula-detail">Deux parties de 20 minutes de jeu, avec environ 10 minutes pour équiper les joueurs et expliquer la mission avant chaque passage.</span>
+            <span class="formula-detail">20 minutes de jeu par partie.</span>
+            <span class="offer-label">Vendredi après l’école : 15 €</span>
           </label>
           <label class="formula-card">
             <input type="radio" name="formula" value="explorateur">
             <span class="formula-name">Explorateur</span>
             <strong>16 € <small>/ enfant</small></strong>
             <span>1 partie · présence d’environ 50 min</span>
-            <span class="formula-detail">Une partie de 20 minutes de jeu, précédée d’environ 10 minutes pour équiper les joueurs et expliquer la mission.</span>
+            <span class="formula-detail">Une partie de 20 minutes de jeu.</span>
           </label>
         </fieldset>
+
+        <div class="field mobile-formula-field">
+          <label for="mobile-formula">La formule</label>
+          <select id="mobile-formula">
+            <option value="commandant">2 parties · Commandant · 20 € / enfant</option>
+            <option value="explorateur">1 partie · Explorateur · 16 € / enfant</option>
+          </select>
+        </div>
 
         <div class="field-grid">
           <div class="field">
             <label for="age">Âge fêté</label>
-            <input id="age" type="number" inputmode="numeric" min="6" max="17" value="8" required>
-            <small>À partir de 6 ans.</small>
+            <input id="age" type="number" inputmode="numeric" min="6" max="17" placeholder="Ex. 8" required aria-describedby="age-help">
+            <small id="age-help">À partir de 6 ans.</small>
           </div>
           <div class="field">
             <label for="children">Nombre d’enfants estimé</label>
-            <input id="children" type="number" inputmode="numeric" min="5" max="17" value="8" required>
-            <small>Le montant final sera ajusté aux présents.</small>
+            <input id="children" type="number" inputmode="numeric" min="5" max="17" placeholder="Ex. 6" required aria-describedby="children-help">
+            <small id="children-help">Enfant fêté inclus · 5 minimum · une estimation suffit.</small>
           </div>
         </div>
         <p id="capacity-note" class="capacity-note"></p>
-        <div class="actions"><button class="button" id="to-calendar" type="button">Voir les dates disponibles</button></div>
+        <p class="included-note">Dans les deux formules : goûter crêpes, boissons et friandises. Environ 10 minutes pour équiper les joueurs et expliquer la mission avant chaque partie.</p>
       </section>
 
-      <section class="panel" data-step="2" aria-labelledby="calendar-title" hidden>
+      <section class="panel calendar-panel" data-step="1" aria-labelledby="calendar-title">
         <div class="panel-heading">
-          <p class="kicker">Étape 2</p>
           <h2 id="calendar-title">Choisissez une date</h2>
-          <p id="mission-summary"></p>
+          <p id="calendar-status" role="status">Renseignez l’âge et le nombre d’enfants au-dessus. Le calendrier s’ajustera automatiquement.</p>
+        </div>
+        <div class="day-filters" role="group" aria-label="Filtrer les jours">
+          <button type="button" data-filter="all" aria-pressed="true">Tous les jours</button>
+          <button type="button" data-filter="wednesday" aria-pressed="false">Mercredi</button>
+          <button type="button" data-filter="friday" aria-pressed="false">Vendredi · 15 €*</button>
+          <button type="button" data-filter="weekend" aria-pressed="false">Week-end</button>
         </div>
         <div class="calendar-layout">
           <div class="calendar-card">
@@ -139,48 +153,55 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <button class="icon-button" id="next-month" type="button" aria-label="Mois suivant">→</button>
             </div>
             <div class="weekdays" aria-hidden="true"><span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span><span>Sam</span><span>Dim</span></div>
-            <div id="calendar-grid" class="calendar-grid" role="grid" aria-label="Calendrier des dates"></div>
+            <div id="calendar-grid" class="calendar-grid" role="group" aria-label="Calendrier des dates"></div>
+            <p class="calendar-legend"><span class="legend-available">● Disponible</span><span>— Fermé</span><span>× Complet</span><span>? Sur demande</span></p>
           </div>
           <div class="slots-card">
             <h3 id="selected-date-label">Sélectionnez une date</h3>
             <div id="slots-status" class="slots-status">Les horaires disponibles apparaîtront ici.</div>
             <div id="slot-list" class="slot-list"></div>
+            <p id="date-quote" class="date-quote" hidden></p>
+            <p id="friday-suggestion" class="friday-suggestion" hidden></p>
             <p class="slot-help">Un horaire absent peut nécessiter une organisation particulière. <a href="/anniversaires.html#demande">Faire une demande personnalisée</a>.</p>
           </div>
         </div>
-        <div class="actions split-actions"><button class="button ghost" data-back="1" type="button">Modifier la formule</button></div>
+        <div class="calendar-bottom"><p>* Commandant complète à 15 € le vendredi après l’école. Aucun anniversaire le jeudi. Horaires scolaires ; vacances et jours fériés à confirmer avec l’équipe.</p><button type="button" class="button ghost" id="refresh-calendar">Actualiser le planning</button></div>
+        <details class="booking-details"><summary>Les formules, le goûter et le déroulement</summary><p>Commandant : deux parties de 20 minutes de jeu, présence de 1 h 45 à 2 h. Explorateur : une partie de 20 minutes, présence d’environ 50 minutes. Prévoir environ 10 minutes de préparation avant chaque partie.</p><p>Goûter crêpes, boissons et friandises inclus dans les deux formules, y compris Commandant à 15 € le vendredi après l’école. Pour les moins de 14 ans, un adulte accompagne le groupe pendant le jeu. Le paiement se fait sur place après l’anniversaire.</p></details>
+        <noscript><p>Activez JavaScript pour consulter les créneaux, ou appelez-nous au 06 07 72 81 64.</p></noscript>
       </section>
 
-      <section class="panel" data-step="3" aria-labelledby="contact-title" hidden>
+      <section class="panel" data-step="2" aria-labelledby="contact-title" hidden>
         <div class="panel-heading">
-          <p class="kicker">Étape 3</p>
+          <p class="kicker">Votre créneau est choisi</p>
           <h2 id="contact-title">Qui prépare la fête ?</h2>
           <p id="booking-summary"></p>
+          <p class="summary-price" id="booking-price"></p>
+          <p>Aucun paiement aujourd’hui. Vous réglez sur place après l’anniversaire, selon le nombre d’enfants réellement présents.</p>
         </div>
         <form id="booking-form">
           <input class="honeypot" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
           <div class="field-grid">
-            <div class="field"><label for="parent-name">Votre prénom et nom</label><input id="parent-name" name="parentName" autocomplete="name" required></div>
-            <div class="field"><label for="child-name">Prénom de l’enfant</label><input id="child-name" name="childName" autocomplete="off" required></div>
+            <div class="field"><label for="parent-name">Prénom et nom du parent</label><input id="parent-name" name="parentName" autocomplete="name" maxlength="100" required></div>
+            <div class="field"><label for="child-name">Prénom de l’enfant</label><input id="child-name" name="childName" autocomplete="off" maxlength="60" required></div>
             <div class="field"><label for="email">Adresse e-mail</label><input id="email" name="email" type="email" autocomplete="email" required></div>
             <div class="field"><label for="phone-field">Téléphone</label><input id="phone-field" name="phone" type="tel" autocomplete="tel" inputmode="tel" required></div>
           </div>
           <label class="check"><input name="shareConsent" type="checkbox" required><span>J’accepte que les parties de laser puissent être partagées avec un autre petit groupe d’âge compatible. La table et le goûter de notre anniversaire restent séparés.</span></label>
           <label class="check"><input name="paymentConsent" type="checkbox" required><span>J’ai compris qu’il n’y a ni paiement en ligne ni acompte. Le règlement se fera sur place après l’anniversaire, selon le nombre d’enfants présents.</span></label>
           <div class="actions split-actions">
-            <button class="button ghost" data-back="2" type="button">Changer de créneau</button>
-            <button class="button" id="confirm-booking" type="submit">Confirmer la réservation</button>
+            <button class="button ghost" data-back="1" type="button">Changer de créneau</button>
+            <button class="button" id="confirm-booking" type="submit">Tester la réservation</button>
           </div>
           <p class="privacy">Vos coordonnées servent uniquement à organiser cette réservation. Aucune donnée personnelle n’est transmise à nos outils de mesure d’audience.</p>
         </form>
       </section>
 
-      <section class="panel success-panel" data-step="4" aria-labelledby="success-title" hidden>
+      <section class="panel success-panel" data-step="3" aria-labelledby="success-title" hidden>
         <div class="success-mark" aria-hidden="true">✓</div>
-        <p class="kicker">Mission enregistrée</p>
-        <h2 id="success-title">L’anniversaire est réservé.</h2>
+        <p class="kicker">Test du parcours</p>
+        <h2 id="success-title">Simulation réussie.</h2>
         <p id="success-summary" class="success-summary"></p>
-        <div class="promise compact"><p><strong>Aucun règlement maintenant.</strong></p><p>Le paiement se fera sur place après l’anniversaire, selon le nombre d’enfants présents.</p></div>
+        <div class="promise compact"><p><strong>Aucune réservation réelle n’a été créée.</strong></p><p>Ce test n’ajoute rien à l’agenda ou au registre et n’envoie aucun e-mail.</p></div>
         <p class="booking-reference">Référence : <strong id="booking-reference"></strong></p>
         <a class="button ghost" href="/">Retour à l’accueil</a>
       </section>

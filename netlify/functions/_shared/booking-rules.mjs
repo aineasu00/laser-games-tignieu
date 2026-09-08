@@ -9,13 +9,32 @@ export const FORMULAS = Object.freeze({
 const OPENING_WINDOWS = Object.freeze({
   0: [["10:30", "12:00"], ["13:30", "20:00"]],
   3: [["10:30", "12:00"], ["13:30", "20:00"]],
-  4: [["17:00", "22:00"]],
   5: [["17:00", "22:00"]],
   6: [["10:30", "12:00"], ["13:30", "22:00"]],
 });
 
 export function getFormula(key) {
   return FORMULAS[key] || null;
+}
+
+export function isValidDate(date) {
+  return typeof date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(date)
+    && !Number.isNaN(Date.parse(`${date}T12:00:00Z`))
+    && new Date(`${date}T12:00:00Z`).toISOString().slice(0, 10) === date;
+}
+
+export function shiftDate(date, days) {
+  const value = new Date(`${date}T12:00:00Z`);
+  value.setUTCDate(value.getUTCDate() + days);
+  return value.toISOString().slice(0, 10);
+}
+
+export function quoteBooking(date, formulaKey, children) {
+  const formula = getFormula(formulaKey);
+  if (!formula || !isValidDate(date)) throw new Error("Formule ou date invalide.");
+  const fridayOffer = formulaKey === "commandant" && new Date(`${date}T12:00:00Z`).getUTCDay() === 5;
+  const unitPrice = fridayOffer ? 15 : formula.price;
+  return { unitPrice, totalEstimate: unitPrice * children, fridayOffer, durationMinutes: formula.durationMinutes, label: formula.label };
 }
 
 export function ageBand(age) {
@@ -57,15 +76,12 @@ export function rotationTimes(startTime, formulaKey) {
 export function candidateStarts(date, formulaKey) {
   const formula = getFormula(formulaKey);
   if (!formula) return [];
-  const weekday = new Date(`${date}T12:00:00+02:00`).getDay();
+  if (!isValidDate(date)) return [];
+  const weekday = new Date(`${date}T12:00:00Z`).getUTCDay();
   const windows = OPENING_WINDOWS[weekday] || [];
   const candidates = [];
 
   for (const [opens, closes] of windows) {
-    if (opens === "10:30" && closes === "12:00" && formulaKey === "commandant") {
-      candidates.push("10:30");
-      continue;
-    }
     for (let cursor = minutes(opens); cursor + formula.durationMinutes <= minutes(closes); cursor += 30) {
       candidates.push(timeFromMinutes(cursor));
     }
@@ -79,22 +95,27 @@ function extractNumber(text, expression) {
 }
 
 export function normalizeCalendarEvent(event) {
-  if (!event || event.status === "cancelled" || event.transparency === "transparent" || !event.start?.dateTime) return null;
+  if (!event || event.status === "cancelled" || event.transparency === "transparent") return null;
+  if (event.start?.date) return { allDay: true, startDate: event.start.date, endDate: event.end?.date || shiftDate(event.start.date, 1), rotations: [], equipment: CAPACITY, age: null, shareAllowed: false };
+  if (!event.start?.dateTime) return null;
   const text = `${event.summary || ""}\n${event.description || ""}`;
-  const start = event.start.dateTime.slice(11, 16);
+  const timeInParis = (value) => new Intl.DateTimeFormat("en-GB", { timeZone: TIME_ZONE, hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date(value));
+  const dateInParis = (value) => new Intl.DateTimeFormat("en-CA", { timeZone: TIME_ZONE }).format(new Date(value));
+  const start = timeInParis(event.start.dateTime);
   const startMs = Date.parse(event.start.dateTime);
   const endMs = Date.parse(event.end?.dateTime || event.start.dateTime);
   const durationMinutes = Math.max(0, Math.round((endMs - startMs) / 60000));
   const explicitRotations = text.match(/Rotations?\s*:\s*([^\n|]+)/i)?.[1]
     ?.match(/\b(?:[01]\d|2[0-3]):[0-5]\d\b/g);
-  const isExplorateur = /explorateur/i.test(text) || durationMinutes <= 70;
+  const knownFormula = /explorateur|commandant/i.test(text);
+  const isExplorateur = /explorateur/i.test(text);
   const rotations = explicitRotations?.length
     ? [...new Set(explicitRotations)]
     : [start, ...(!isExplorateur && durationMinutes >= 90 ? [addMinutes(start, 60)] : [])];
 
   const equipmentText = text.match(/Équipements?\s+prévus?\s*:\s*([^\n|]+)/i)?.[1]?.split("/")[0] || "";
   const equipmentValues = equipmentText.match(/\d+/g)?.map(Number) || [];
-  let equipment = equipmentValues.length ? Math.max(...equipmentValues.filter((value) => value <= CAPACITY)) : null;
+  let equipment = equipmentValues.length ? (equipmentText.includes('+') ? equipmentValues.reduce((sum, value) => sum + value, 0) : Math.max(...equipmentValues)) : null;
   const children = extractNumber(text, /\b(\d{1,2})\s*(?:enfants?|joueurs?)\b/i);
   const accompanyingAdults = extractNumber(text, /\b(\d{1,2})\s*(?:adultes?\s+)?accompagn(?:ants?|ateurs?|atrices?)\b/i);
   const people = extractNumber(text, /\b(\d{1,2})\s*personnes?\b/i);
@@ -102,7 +123,13 @@ export function normalizeCalendarEvent(event) {
   if (!equipment && children) equipment = accompanyingAdults ? children + accompanyingAdults : equipmentNeeded(children, age ?? 13);
   if (!equipment && people) equipment = people;
 
+  const end = event.end?.dateTime || new Date(startMs + 30 * 60000).toISOString();
   return {
+    startDate: dateInParis(event.start.dateTime),
+    endDate: dateInParis(end),
+    startMinute: minutes(start),
+    endMinute: minutes(timeInParis(end)),
+    uncertain: !explicitRotations?.length && !knownFormula,
     rotations,
     equipment: Math.min(equipment || CAPACITY, CAPACITY),
     age,
@@ -122,10 +149,23 @@ export function buildAvailability({ date, formulaKey, age, children, events }) {
     let shareAllowed = true;
 
     for (const rotation of rotations) {
-      const overlapping = normalized.filter((event) => event.rotations.includes(rotation));
+      const overlapsInterval = (event) => {
+        if (event.allDay) return date >= event.startDate && date < event.endDate;
+        if (date < event.startDate || date > event.endDate) return false;
+        const from = date === event.startDate ? event.startMinute : 0;
+        const until = date === event.endDate ? event.endMinute : 1440;
+        return minutes(rotation) < until && minutes(rotation) + 30 > from;
+      };
+      const overlapping = normalized.filter((event) => event.allDay || event.uncertain
+        ? overlapsInterval(event)
+        : event.startDate === date && event.rotations.some((time) => minutes(rotation) < minutes(time) + 30 && minutes(rotation) + 30 > minutes(time)));
+      if (overlapping.some((event) => event.allDay || event.uncertain)) {
+        maxOccupied = CAPACITY;
+        break;
+      }
       const occupied = overlapping.reduce((sum, event) => sum + event.equipment, 0);
       maxOccupied = Math.max(maxOccupied, occupied);
-      compatible = compatible && overlapping.every((event) => event.age === null || groupsAreCompatible(age, event.age));
+      compatible = compatible && overlapping.every((event) => event.age !== null && groupsAreCompatible(age, event.age));
       shareAllowed = shareAllowed && overlapping.every((event) => event.shareAllowed);
     }
 
@@ -144,8 +184,8 @@ export function validateBookingInput(input) {
   const age = Number(input.age);
   const children = Number(input.children);
   if (!formula) errors.push("Formule inconnue.");
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(input.date || "")) errors.push("Date invalide.");
-  if (!/^\d{2}:\d{2}$/.test(input.startTime || "")) errors.push("Créneau invalide.");
+  if (!isValidDate(input.date || "")) errors.push("Date invalide.");
+  if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(input.startTime || "")) errors.push("Créneau invalide.");
   if (!Number.isInteger(age) || age < 6 || age > 17) errors.push("L’âge doit être compris entre 6 et 17 ans.");
   if (!Number.isInteger(children) || children < 5 || children > 17) errors.push("Le groupe doit comprendre entre 5 et 17 enfants.");
   if (Number.isInteger(age) && Number.isInteger(children) && equipmentNeeded(children, age) > CAPACITY) errors.push("Le groupe dépasse la capacité de 17 équipements, adulte compris.");
