@@ -24,6 +24,8 @@ Pas de noms, emails, téléphones, texte libre, âge exact, date choisie, nombre
 
 Consentement statistiques requis, refus/retrait/expiration bloquants pour ces événements. Les préversions et localhost sont exclus. Les événements précédant l’acceptation ne sont pas rejoués : les mesures représentent uniquement les visiteurs consentants et non toute la clientèle. Le pipeline Google du site peut utiliser le Consent Mode pour ses événements standards ; ne pas assimiler « aucun événement métier » à « aucune requête réseau Google ».
 
+Huit dimensions personnalisées GA4 créées et relues le 8 septembre : `Reservation motif` → `reason`, `Reservation formule` → `formula`, `Reservation etape` → `stage`, `Reservation champ` → `field`, `Reservation filtre jour` → `day_filter`, `Reservation disponibilite` → `result`, `Reservation attente` → `latency`, `Reservation version` → `funnel_version`. Portée événement, valeurs fixes uniquement. Les rapports historiques nécessitent le délai de traitement GA4 ; la réception temps réel est déjà vérifiée. L’exploration personnalisée en entonnoir n’est pas encore enregistrée : suivre la procédure ci-dessous quand l’échantillon aura commencé à se constituer.
+
 ### Lire les résultats
 
 Dans GA4, utiliser Exploration → entonnoir fermé avec les étapes ci-dessus, en comptant les utilisateurs/sessions et non les clics. Comparer mobile/ordinateur et source/support. L’actualisation automatique du calendrier peut répéter `booking_availability`, et les retours en arrière peuvent répéter les étapes.
