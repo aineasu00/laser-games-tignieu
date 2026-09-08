@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<script>
+window.dataLayer=window.dataLayer||[];
+window.gtag=window.gtag||function(){window.dataLayer.push(arguments);};
+(function(){
+  var analyticsConsent='denied';
+  try{
+    var saved=JSON.parse(localStorage.getItem('lgt-cookie-consent')||'null');
+    if(saved&&saved.choice==='accepted'&&Date.now()-saved.savedAt<15552000000){analyticsConsent='granted';}
+  }catch(error){}
+  window.gtag('consent','default',{
+    ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',
+    analytics_storage:analyticsConsent,functionality_storage:'granted',security_storage:'granted',wait_for_update:500
+  });
+})();
+</script>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5VZ9BBGG');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Réserver un anniversaire en ligne — Laser Games Tignieu</title>
+<meta name="description" content="Choisissez votre formule, consultez les créneaux disponibles et réservez directement l’anniversaire de votre enfant au Laser Games Tignieu. Paiement sur place le jour de la fête.">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0B0E13">
+<link rel="canonical" href="https://lasergamestignieu.com/reservation-anniversaire.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Laser Games Tignieu">
+<meta property="og:title" content="Réserver un anniversaire — Laser Games Tignieu">
+<meta property="og:description" content="Un calendrier simple pour choisir une formule et réserver un créneau disponible. Aucun paiement en ligne.">
+<meta property="og:url" content="https://lasergamestignieu.com/reservation-anniversaire.html">
+<meta property="og:image" content="https://d8j0ntlcm91z4.cloudfront.net/user_3BhKyG6aqunct5eu5AhqQ2xMWu6/hf_20260706_140304_ec7765c7-1e4b-49e6-9cfd-798d5edf4669.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230B0E13'/%3E%3Ccircle cx='16' cy='16' r='10' fill='none' stroke='%23FF5A2D' stroke-width='2.5'/%3E%3Ccircle cx='16' cy='16' r='3.5' fill='%234FE3C1'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/cookie-consent.css">
+<link rel="stylesheet" href="/reservation-anniversaire.css">
+<script defer src="/cookie-consent.js"></script>
+<script type="module" defer src="/reservation-anniversaire.js"></script>
+</head>
+<body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5VZ9BBGG" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<header class="site-header">
+  <div class="hazard"></div>
+  <div class="header-inner">
+    <a class="brand" href="/">LASER GAMES <span>TIGNIEU</span></a>
+    <nav aria-label="Navigation principale">
+      <a href="/anniversaires.html">Formules anniversaire</a>
+      <a href="/#tarifs">Tarifs</a>
+      <a href="/battle-royale.html">Battle Royale</a>
+    </nav>
+    <a class="phone" href="tel:+33607728164">06 07 72 81 64</a>
+  </div>
+</header>
+
+<main>
+  <section class="intro">
+    <div class="wrap intro-grid">
+      <div>
+        <p class="eyebrow">Réservation directe</p>
+        <h1>Sa mission commence ici.</h1>
+        <p class="lede">Choisissez la formule, la date et l’heure. Le planning est revérifié au moment de valider votre réservation.</p>
+      </div>
+      <div class="promise" aria-label="Informations importantes">
+        <p><strong>Aucun paiement en ligne</strong></p>
+        <p>Vous réglez sur place, après l’anniversaire, selon le nombre d’enfants réellement présents.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="booking-section">
+    <div class="wrap">
+      <ol class="steps" aria-label="Étapes de réservation">
+        <li class="active" data-step-indicator="1"><span>1</span> La mission</li>
+        <li data-step-indicator="2"><span>2</span> Date et heure</li>
+        <li data-step-indicator="3"><span>3</span> Vos coordonnées</li>
+      </ol>
+
+      <div id="booking-alert" class="alert" role="alert" hidden></div>
+
+      <section class="panel active" data-step="1" aria-labelledby="mission-title">
+        <div class="panel-heading">
+          <p class="kicker">Étape 1</p>
+          <h2 id="mission-title">Composez sa mission</h2>
+          <p>La réservation directe est disponible pour les groupes de 5 enfants minimum qui respectent la capacité de 17 équipements, adulte accompagnateur compris.</p>
+        </div>
+
+        <fieldset class="formula-picker">
+          <legend>Choisissez une formule</legend>
+          <label class="formula-card selected">
+            <input type="radio" name="formula" value="commandant" checked>
+            <span class="formula-name">Commandant</span>
+            <strong>20 € <small>/ enfant</small></strong>
+            <span>2 parties · présence de 1 h 45 à 2 h</span>
+            <span class="formula-detail">Deux rotations de 30 minutes, espacées d’environ une heure.</span>
+          </label>
+          <label class="formula-card">
+            <input type="radio" name="formula" value="explorateur">
+            <span class="formula-name">Explorateur</span>
+            <strong>16 € <small>/ enfant</small></strong>
+            <span>1 partie · présence d’environ 50 min</span>
+            <span class="formula-detail">Une seule rotation de 30 minutes dans le labyrinthe.</span>
+          </label>
+        </fieldset>
+
+        <div class="field-grid">
+          <div class="field">
+            <label for="age">Âge fêté</label>
+            <input id="age" type="number" inputmode="numeric" min="6" max="17" value="8" required>
+            <small>À partir de 6 ans.</small>
+          </div>
+          <div class="field">
+            <label for="children">Nombre d’enfants estimé</label>
+            <input id="children" type="number" inputmode="numeric" min="5" max="17" value="8" required>
+            <small>Le montant final sera ajusté aux présents.</small>
+          </div>
+        </div>
+        <p id="capacity-note" class="capacity-note"></p>
+        <div class="actions"><button class="button" id="to-calendar" type="button">Voir les dates disponibles</button></div>
+      </section>
+
+      <section class="panel" data-step="2" aria-labelledby="calendar-title" hidden>
+        <div class="panel-heading">
+          <p class="kicker">Étape 2</p>
+          <h2 id="calendar-title">Choisissez une date</h2>
+          <p id="mission-summary"></p>
+        </div>
+        <div class="calendar-layout">
+          <div class="calendar-card">
+            <div class="calendar-toolbar">
+              <button class="icon-button" id="previous-month" type="button" aria-label="Mois précédent">←</button>
+              <h3 id="calendar-month" aria-live="polite"></h3>
+              <button class="icon-button" id="next-month" type="button" aria-label="Mois suivant">→</button>
+            </div>
+            <div class="weekdays" aria-hidden="true"><span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span><span>Sam</span><span>Dim</span></div>
+            <div id="calendar-grid" class="calendar-grid" role="grid" aria-label="Calendrier des dates"></div>
+          </div>
+          <div class="slots-card">
+            <h3 id="selected-date-label">Sélectionnez une date</h3>
+            <div id="slots-status" class="slots-status">Les horaires disponibles apparaîtront ici.</div>
+            <div id="slot-list" class="slot-list"></div>
+            <p class="slot-help">Un horaire absent peut nécessiter une organisation particulière. <a href="/anniversaires.html#demande">Faire une demande personnalisée</a>.</p>
+          </div>
+        </div>
+        <div class="actions split-actions"><button class="button ghost" data-back="1" type="button">Modifier la formule</button></div>
+      </section>
+
+      <section class="panel" data-step="3" aria-labelledby="contact-title" hidden>
+        <div class="panel-heading">
+          <p class="kicker">Étape 3</p>
+          <h2 id="contact-title">Qui prépare la fête ?</h2>
+          <p id="booking-summary"></p>
+        </div>
+        <form id="booking-form">
+          <input class="honeypot" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <div class="field-grid">
+            <div class="field"><label for="parent-name">Votre prénom et nom</label><input id="parent-name" name="parentName" autocomplete="name" required></div>
+            <div class="field"><label for="child-name">Prénom de l’enfant</label><input id="child-name" name="childName" autocomplete="off" required></div>
+            <div class="field"><label for="email">Adresse e-mail</label><input id="email" name="email" type="email" autocomplete="email" required></div>
+            <div class="field"><label for="phone-field">Téléphone</label><input id="phone-field" name="phone" type="tel" autocomplete="tel" inputmode="tel" required></div>
+          </div>
+          <label class="check"><input name="shareConsent" type="checkbox" required><span>J’accepte que les parties de laser puissent être partagées avec un autre petit groupe d’âge compatible. La table et le goûter de notre anniversaire restent séparés.</span></label>
+          <label class="check"><input name="paymentConsent" type="checkbox" required><span>J’ai compris qu’il n’y a ni paiement en ligne ni acompte. Le règlement se fera sur place après l’anniversaire, selon le nombre d’enfants présents.</span></label>
+          <div class="actions split-actions">
+            <button class="button ghost" data-back="2" type="button">Changer de créneau</button>
+            <button class="button" id="confirm-booking" type="submit">Confirmer la réservation</button>
+          </div>
+          <p class="privacy">Vos coordonnées servent uniquement à organiser cette réservation. Aucune donnée personnelle n’est transmise à nos outils de mesure d’audience.</p>
+        </form>
+      </section>
+
+      <section class="panel success-panel" data-step="4" aria-labelledby="success-title" hidden>
+        <div class="success-mark" aria-hidden="true">✓</div>
+        <p class="kicker">Mission enregistrée</p>
+        <h2 id="success-title">L’anniversaire est réservé.</h2>
+        <p id="success-summary" class="success-summary"></p>
+        <div class="promise compact"><p><strong>Aucun règlement maintenant.</strong></p><p>Le paiement se fera sur place après l’anniversaire, selon le nombre d’enfants présents.</p></div>
+        <p class="booking-reference">Référence : <strong id="booking-reference"></strong></p>
+        <a class="button ghost" href="/">Retour à l’accueil</a>
+      </section>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>LASER GAMES TIGNIEU · 60 Route de Crémieu, 38230 Tignieu-Jameyzieu</p>
+  <p>Besoin d’aide ? <a href="tel:+33607728164">06 07 72 81 64</a></p>
+</footer>
+<div class="mobile-bar"><a href="tel:+33607728164">Une question ? 06 07 72 81 64</a></div>
+</body>
+</html>

@@ -1,6 +1,15 @@
 [build]
   publish = "src"
 
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/reservation-anniversaire"
+  to = "/reservation-anniversaire.html"
+  status = 200
+
 [[redirects]]
   from = "/battle-royale"
   to = "/battle-royale.html"

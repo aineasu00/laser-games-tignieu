@@ -95,7 +95,6 @@
     bottom: calc(78px + env(safe-area-inset-bottom));
   }
 }
-
 @media (max-width: 480px) {
   .lgt-consent {
     right: 10px;

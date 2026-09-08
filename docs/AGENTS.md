@@ -53,3 +53,12 @@ Le site doit générer des réservations par téléphone, des inscriptions à l'
 3. Ajouter une page /admin pour consulter les inscriptions Battle Royale
 4. Créer une page de réservation en ligne
 5. Optimiser les images et les Core Web Vitals
+
+## 📅 Architecture réservation anniversaire
+
+- Frontend statique : `src/reservation-anniversaire.html`, CSS et JavaScript vanilla associés.
+- Backend : Netlify Functions sous `netlify/functions/` ; aucun secret Google dans le navigateur.
+- Disponibilité : capacité de 17 équipements calculée par blocs de 30 minutes. Explorateur occupe un bloc et dure environ 50 minutes ; Commandant occupe deux blocs espacés d’une heure et dure 1 h 45 à 2 h.
+- Autorité opérationnelle : Google Agenda `lasergames38@gmail.com`. Suivi commercial : registre Google Sheets anniversaire.
+- La réservation directe exige l’accord sur le partage éventuel avec un groupe d’âge compatible et confirme uniquement un créneau encore sûr après revérification serveur.
+- Aucun paiement en ligne ni acompte : règlement sur place après l’anniversaire selon le nombre d’enfants présents.

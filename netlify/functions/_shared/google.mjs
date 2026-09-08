@@ -1,0 +1,175 @@
+import { createSign } from "node:crypto";
+
+const CALENDAR_ID = "lasergames38@gmail.com";
+const SHEET_ID = "11O5vVGMv-X8T470FKd32e6zEqrKEbpJoCFftofFCegs";
+const GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
+const GOOGLE_SCOPE = [
+  "https://www.googleapis.com/auth/calendar",
+  "https://www.googleapis.com/auth/spreadsheets",
+].join(" ");
+
+function requiredEnv(name) {
+  const value = Netlify.env.get(name);
+  if (!value) throw new Error(`Configuration serveur absente : ${name}`);
+  return value;
+}
+
+function base64url(value) {
+  const input = typeof value === "string" ? value : JSON.stringify(value);
+  return Buffer.from(input).toString("base64url");
+}
+
+async function accessToken() {
+  const issuedAt = Math.floor(Date.now() / 1000);
+  const header = base64url({ alg: "RS256", typ: "JWT" });
+  const claims = base64url({
+    iss: requiredEnv("GOOGLE_SERVICE_ACCOUNT_EMAIL"),
+    scope: GOOGLE_SCOPE,
+    aud: GOOGLE_TOKEN_URL,
+    iat: issuedAt,
+    exp: issuedAt + 3600,
+  });
+  const unsignedToken = `${header}.${claims}`;
+  const signature = createSign("RSA-SHA256")
+    .update(unsignedToken)
+    .end()
+    .sign(requiredEnv("GOOGLE_PRIVATE_KEY").replace(/\\n/g, "\n"), "base64url");
+  const response = await fetch(GOOGLE_TOKEN_URL, {
+    method: "POST",
+    headers: { "content-type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
+      assertion: `${unsignedToken}.${signature}`,
+    }),
+  });
+  const payload = await response.json();
+  if (!response.ok || !payload.access_token) {
+    throw new Error(`Authentification Google impossible (${response.status})`);
+  }
+  return payload.access_token;
+}
+
+async function googleRequest(url, options = {}) {
+  const token = await accessToken();
+  const response = await fetch(url, {
+    ...options,
+    headers: {
+      authorization: `Bearer ${token}`,
+      ...(options.body ? { "content-type": "application/json" } : {}),
+      ...options.headers,
+    },
+  });
+  const payload = await response.json();
+  if (!response.ok) {
+    const message = payload?.error?.message || `Erreur Google (${response.status})`;
+    throw new Error(message);
+  }
+  return payload;
+}
+
+function parisDateTime(date, time) {
+  const probe = new Date(`${date}T${time}:00Z`);
+  const zoneName = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Europe/Paris",
+    timeZoneName: "shortOffset",
+  }).formatToParts(probe).find((part) => part.type === "timeZoneName")?.value || "GMT+1";
+  const match = zoneName.match(/GMT([+-])(\d{1,2})(?::(\d{2}))?/);
+  const sign = match?.[1] || "+";
+  const hours = String(Number(match?.[2] || 1)).padStart(2, "0");
+  const minutes = match?.[3] || "00";
+  return `${date}T${time}:00${sign}${hours}:${minutes}`;
+}
+
+export async function listEvents(date) {
+  const calendarId = Netlify.env.get("GOOGLE_CALENDAR_ID") || CALENDAR_ID;
+  const params = new URLSearchParams({
+    timeMin: parisDateTime(date, "00:00"),
+    timeMax: parisDateTime(date, "23:59"),
+    singleEvents: "true",
+    orderBy: "startTime",
+    timeZone: "Europe/Paris",
+  });
+  const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?${params}`;
+  const payload = await googleRequest(url);
+  return payload.items || [];
+}
+
+export async function createBirthdayEvent({ bookingId, data, formula, rotations }) {
+  const calendarId = Netlify.env.get("GOOGLE_CALENDAR_ID") || CALENDAR_ID;
+  const start = parisDateTime(data.date, data.startTime);
+  const endDate = new Date(Date.parse(start) + formula.durationMinutes * 60000).toISOString();
+  const equipment = Number(data.children) + (Number(data.age) < 14 ? 1 : 0);
+  const description = [
+    `Réservation directe site : ${bookingId}`,
+    `Parent : ${data.parentName}`,
+    `E-mail : ${data.email}`,
+    `Téléphone : ${data.phone}`,
+    `Enfant : ${data.childName}, ${data.age} ans`,
+    `Effectif estimé : ${data.children} enfants${Number(data.age) < 14 ? " + 1 adulte accompagnateur" : ""}`,
+    `Formule : ${formula.label} — ${formula.price} € par enfant`,
+    `Rotations : ${rotations.join(", ")}`,
+    `Équipements prévus : ${equipment}/17`,
+    `Places complémentaires : ${17 - equipment}`,
+    `Âge de référence : ${data.age}`,
+    "Partage : autorisé avec un groupe d’âge compatible",
+    "Paiement : sur place après l’anniversaire, selon le nombre d’enfants réellement présents. Aucun acompte ni paiement en ligne.",
+  ].join("\n");
+  const eventId = `web${bookingId.replace(/[^a-z0-9]/gi, "").toLowerCase()}`.slice(0, 64);
+  const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events`;
+  return googleRequest(url, {
+    method: "POST",
+    body: JSON.stringify({
+      id: eventId,
+      summary: `${data.childName} ${data.age} ans ${data.children} enfants ${formula.label} ${formula.price}€`,
+      description,
+      start: { dateTime: start, timeZone: "Europe/Paris" },
+      end: { dateTime: endDate, timeZone: "Europe/Paris" },
+      extendedProperties: { private: { bookingId, source: "site-reservation" } },
+    }),
+  });
+}
+
+export async function appendBirthdayRow({ bookingId, data, formula, rotations, eventId }) {
+  const spreadsheetId = Netlify.env.get("GOOGLE_SHEET_ID") || SHEET_ID;
+  const equipment = Number(data.children) + (Number(data.age) < 14 ? 1 : 0);
+  const notes = [
+    `Réservation directe confirmée sur le site. Événement Agenda : ${eventId}.`,
+    `Rotations : ${rotations.join(", ")}`,
+    `Équipements prévus : ${equipment}/17`,
+    `Places complémentaires : ${17 - equipment}`,
+    `Âge de référence : ${data.age}`,
+    "Partage autorisé avec un groupe d’âge compatible.",
+    "Paiement sur place après l’anniversaire selon les enfants présents.",
+  ].join(" | ");
+  const range = encodeURIComponent("Demandes!A:R");
+  const params = new URLSearchParams({
+    valueInputOption: "USER_ENTERED",
+    insertDataOption: "INSERT_ROWS",
+  });
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(spreadsheetId)}/values/${range}:append?${params}`;
+  await googleRequest(url, {
+    method: "POST",
+    body: JSON.stringify({
+      values: [[
+        bookingId,
+        new Date().toISOString(),
+        data.parentName,
+        data.email.toLowerCase(),
+        data.phone,
+        data.date,
+        data.childName,
+        Number(data.age),
+        Number(data.children),
+        `${formula.label} (${formula.price} €)`,
+        data.startTime,
+        data.startTime,
+        "Confirmée",
+        "Oui",
+        "",
+        "Aucune",
+        "",
+        notes,
+      ]],
+    }),
+  });
+}
