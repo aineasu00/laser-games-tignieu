@@ -58,14 +58,14 @@ Variables Netlify requises, à enregistrer dans l’interface Netlify et jamais 
 - `GOOGLE_CALENDAR_ID` (facultatif, valeur par défaut : `lasergames38@gmail.com`) ;
 - `GOOGLE_SHEET_ID` (facultatif, le registre anniversaire actuel est utilisé par défaut).
 
-Pour tester uniquement la lecture, partager l’agenda `lasergames38@gmail.com` avec le compte de service avec le droit de consulter tous les détails. Pas besoin d’ouvrir publiquement l’agenda, ni de partager le Sheet à ce stade. Le serveur utilise le périmètre Google Calendar en lecture seule. En local, utiliser `netlify dev`.
+Le compte de service dédié possède sur `lasergames38@gmail.com` le droit de modifier les événements et d’en voir tous les détails, nécessaire à la future création automatique des réservations. Il ne peut ni gérer le partage ni administrer le compte Google. La prévisualisation utilise malgré tout uniquement le périmètre Google Calendar en lecture seule. Pas besoin d’ouvrir publiquement l’agenda, ni de partager le Sheet à ce stade. En local, utiliser `netlify dev`.
 
 Les Deploy Previews utilisent par défaut un calendrier explicitement fictif (dont des journées complètes), sans données clients. La variable `BOOKING_PREVIEW_READ_CALENDAR=true`, avec les deux identifiants Google, active la lecture réelle dans la préversion ; la soumission reste une simulation. Si Google échoue, le serveur renvoie 503 et les jours restent non réservables : il ne revient jamais silencieusement à un agenda vide.
 
 Le navigateur actualise le mois toutes les 60 secondes lorsqu’il est visible et au clic sur « Actualiser ». La validation relit l’agenda. Les notifications push Google ne sont pas encore installées ; ne pas annoncer une synchronisation instantanée.
 
-Configuration restant à terminer : accès serveur Google, règles de vacances/jours fériés et limites horaires de l’offre vendredi, capacité par type d’équipement, tables et encadrement, stockage transactionnel anti-doublon et reprise des synchronisations partielles. Les anciennes descriptions d’agenda doivent être vérifiées avant ouverture des réservations réelles.
+Configuration restant à terminer : règles de vacances/jours fériés et limites horaires de l’offre vendredi, capacité par type d’équipement, tables et encadrement, stockage transactionnel anti-doublon, accès au registre Sheets et reprise des synchronisations partielles. Les anciennes descriptions d’agenda doivent être vérifiées avant ouverture des réservations réelles.
 
-Vérification de configuration le 8 septembre 2026 : identifiants `GOOGLE_SERVICE_ACCOUNT_EMAIL` et `GOOGLE_PRIVATE_KEY` absents de Netlify. Le connecteur Google de Codex ne constitue pas une authentification utilisable par le site.
+Vérification de configuration le 8 septembre 2026 : le compte de service est partagé sur l’agenda avec le droit de modifier les événements et ses identifiants sont stockés uniquement dans le contexte Netlify `deploy-preview`. `BOOKING_PREVIEW_READ_CALENDAR=true` active la lecture réelle ; aucune variable n’a été ajoutée au contexte de production.
 
 Lancer les tests métier sans dépendance externe avec `node --test tests/*.test.mjs`.

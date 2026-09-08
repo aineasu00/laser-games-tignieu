@@ -2,7 +2,7 @@
 
 Document de conception du 8 septembre 2026. Aucun code à produire à ce stade. Aucune mise en production, réservation réelle ou communication client à déclencher. L’objectif est un parcours mobile rapide, rassurant et cohérent avec l’exploitation réelle.
 
-Mise à jour après validation de Cédric : la réalisation de la préversion est désormais autorisée. Le calendrier et les critères de groupe/formule partagent le premier écran ; aucune étape préalable ne masque le calendrier. Le parcours réalisé devient « Votre créneau → Vos coordonnées → Confirmation ». Les sections de conception ci-dessous restent le contexte, avec cette nouvelle priorité d’affichage. Les réservations réelles restent désactivées ; voir README pour la connexion Google encore à configurer et les conditions d’ouverture.
+Mise à jour après validation de Cédric : la réalisation de la préversion est désormais autorisée. Le calendrier et les critères de groupe/formule partagent le premier écran ; aucune étape préalable ne masque le calendrier. Le parcours réalisé devient « Votre créneau → Vos coordonnées → Confirmation ». Les sections de conception ci-dessous restent le contexte, avec cette nouvelle priorité d’affichage. La lecture du vrai Google Agenda est maintenant configurée dans la prévisualisation ; les réservations réelles et toutes les écritures restent désactivées jusqu’à la recette finale.
 
 ## 1. Objectif et preuves disponibles
 

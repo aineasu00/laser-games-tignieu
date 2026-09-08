@@ -38,7 +38,9 @@ export default async (request: Request, context: Context) => {
       checkedAt: new Date().toISOString(), month: firstDate.slice(0, 7), formula: formulaKey,
       days, ...(date ? { date, slots: days[0].slots, quote: days[0].quote } : {}),
     });
-  } catch {
+  } catch (error) {
+    const diagnostic = error instanceof Error ? error.message : String(error);
+    console.error(`Birthday availability calendar read failed: ${diagnostic}`);
     return json({ error: "Le planning n’est pas accessible pour le moment. Réessayez ou appelez-nous au 06 07 72 81 64.", source: "unavailable" }, 503);
   }
 };

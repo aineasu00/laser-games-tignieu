@@ -1,16 +1,16 @@
 # Connexion du calendrier de réservation à Google Agenda
 
-État du 8 septembre 2026 : interface et lecteur mensuel prêts à tester ; aucun accès Google configuré dans Netlify. Le connecteur Google de Codex ne peut pas être réutilisé comme identifiant du site. La connexion réelle ne peut donc pas être vérifiée pour l’instant.
+État du 8 septembre 2026 : connexion Google configurée et vérifiée dans le contexte Netlify `deploy-preview`. La prévisualisation lit l’agenda réel mais ne crée encore ni événement, ni ligne Sheets, ni e-mail.
 
 ## Accès à préparer
 
 1. Dans un projet Google Cloud appartenant à Laser Games, activer Google Calendar API et utiliser un compte de service dédié au site. Éviter un compte personnel ou des droits d’administration inutiles.
-2. Dans les paramètres de partage du calendrier `lasergames38@gmail.com`, ajouter l’adresse de ce compte de service avec le droit de consulter tous les détails des événements. Ce droit est nécessaire pour lire la formule, l’effectif et les passages ; un simple accès libre/occupé ne suffit pas. L’agenda n’a pas besoin d’être public.
+2. Dans les paramètres de partage du calendrier `lasergames38@gmail.com`, ajouter l’adresse de ce compte de service avec le droit « Apporter des modifications et voir les détails de tous les événements ». Ce droit prépare la future création des réservations sans lui permettre de gérer le partage. L’agenda n’a pas besoin d’être public.
 3. Stocker uniquement côté serveur Netlify l’adresse du compte et sa clé privée sous `GOOGLE_SERVICE_ACCOUNT_EMAIL` et `GOOGLE_PRIVATE_KEY`, disponibles aux Functions dans le contexte de préversion. Ne pas coller de clé dans le chat, le dépôt ou le navigateur du site.
 4. Activer `BOOKING_PREVIEW_READ_CALENDAR=true` dans ce même contexte et redéployer la préversion pour appliquer la configuration.
 5. Comparer au minimum une journée libre, une journée occupée et une fermeture avec l’agenda professionnel. Vérifier aussi une réservation à deux passages, les changements d’heure et une modification faite manuellement dans Google Agenda.
 
-La bannière passe de « Calendrier fictif » à « Lecture de Google Agenda ». La réservation reste simulée : pas de création d’événement, de ligne Sheets, de paiement ou d’e-mail. Un échec de lecture affiche une indisponibilité et ne remplace jamais Google par des créneaux fictivement libres.
+La bannière passe de « Calendrier fictif » à « Lecture de Google Agenda ». La réservation reste simulée : pas de création d’événement, de ligne Sheets, de paiement ou d’e-mail. Un échec de lecture affiche une indisponibilité et ne remplace jamais Google par des créneaux fictivement libres. Le compte possède un droit d’écriture, mais la fonction de disponibilité demande uniquement le périmètre OAuth `calendar.readonly`.
 
 ## Ce qui fonctionne déjà
 
