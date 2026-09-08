@@ -34,6 +34,10 @@ test("les durées métier et le sitemap sont cohérents", () => {
   const sitemap = read("src/sitemap.xml");
   assert.doesNotMatch(birthdays, /1h30|1 h 30/);
   assert.match(birthdays, /1 h 45 à 2 h/);
+  assert.match(birthdays, /parties? de 20 minutes/);
   assert.match(booking, /50 min/);
+  assert.match(booking, /20 minutes de jeu/);
+  assert.match(booking, /10 minutes pour équiper/);
+  assert.doesNotMatch(booking, /rotations? de 30 minutes/);
   assert.match(sitemap, /reservation-anniversaire\.html/);
 });
