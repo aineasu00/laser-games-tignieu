@@ -42,14 +42,14 @@ git push origin main
 
 Déploiement continu activé via GitHub → Netlify.
 
-## Réservation anniversaire directe
+## Demandes anniversaire — ouverture progressive
 
 Le parcours `/reservation-anniversaire.html` affiche le calendrier dès l’entrée. L’âge, l’effectif et la formule le personnalisent sur la même page. Les filtres mercredi/vendredi/week-end, les jours complets et le prix estimé viennent du serveur. Le jeudi est exclu des anniversaires ; Commandant est à 15 € par enfant le vendredi après l’école (goûter, boissons et friandises inclus).
 
 Deux Netlify Functions :
 
 - `GET /api/birthday-availability?month=YYYY-MM&formula=commandant&age=8&children=6` lit un mois en une requête Google paginée, puis renvoie uniquement les statuts des jours, heures et devis publics. `date=YYYY-MM-DD` reste disponible pour une seule date. Aucun événement privé n’est retourné au navigateur.
-- `POST /api/book-birthday` revérifie le créneau et le prix, puis renvoie une référence de simulation stable. Il ne conserve pas les coordonnées du test. **Les écritures en production sont désactivées** jusqu’à validation de la gestion transactionnelle de capacité, du matériel, des tables et de la synchronisation Google/Sheets. L’ancien verrou non atomique Blobs a été retiré.
+- `POST /api/book-birthday` revérifie le créneau et le prix. En préversion, il renvoie une simulation. En production avec `BOOKING_REQUESTS_ENABLED=true`, il valide une **demande à transmettre**, sans bloquer de place. Le navigateur la dépose ensuite dans le formulaire Netlify `anniversaire` existant ; seuls la réponse HTTP réussie et le reçu attendu déclenchent l’écran de réussite et `generate_lead` (avec consentement). Cédric confirme ensuite selon la procédure habituelle. Aucune écriture automatique Agenda/Sheets ni aucun e-mail de confirmation client à ce stade.
 
 Variables Netlify requises, à enregistrer dans l’interface Netlify et jamais dans Git :
 
@@ -66,6 +66,8 @@ Le navigateur actualise le mois toutes les 60 secondes lorsqu’il est visible e
 
 Configuration restant à terminer : règles de vacances/jours fériés et limites horaires de l’offre vendredi, capacité par type d’équipement, tables et encadrement, stockage transactionnel anti-doublon, accès au registre Sheets et reprise des synchronisations partielles. Les anciennes descriptions d’agenda doivent être vérifiées avant ouverture des réservations réelles.
 
-Vérification de configuration le 8 septembre 2026 : le compte de service est partagé sur l’agenda avec le droit de modifier les événements et ses identifiants sont stockés uniquement dans le contexte Netlify `deploy-preview`. `BOOKING_PREVIEW_READ_CALENDAR=true` active la lecture réelle ; aucune variable n’a été ajoutée au contexte de production.
+Configuration le 8 septembre 2026 : identifiants Google dans les contextes `deploy-preview` et `production`. `BOOKING_PREVIEW_READ_CALENDAR=true` active la lecture réelle en préversion. `BOOKING_REQUESTS_ENABLED=true` ouvre uniquement les demandes réelles en production. Les deux contextes utilisent OAuth `calendar.readonly`, malgré le droit writer déjà accordé au compte de service.
+
+Le plan de mesure, la recette réelle, les limites et la prochaine étape sont consignés dans [docs/OUVERTURE-PROGRESSIVE.md](docs/OUVERTURE-PROGRESSIVE.md).
 
 Lancer les tests métier sans dépendance externe avec `node --test tests/*.test.mjs`.

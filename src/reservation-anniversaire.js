@@ -1,3 +1,4 @@
+import { trackBooking } from './booking-analytics.js';
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
 const parisToday = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Paris' }).format(new Date());
@@ -10,6 +11,12 @@ const state = { formula: 'commandant', age: null, children: null, month: parisTo
 let activeRequest;
 let revision = 0;
 let debounce;
+let submitting = false;
+let submissionUncertain = false;
+let formStarted = false;
+let openTracked = false;
+const track = (event, extra = {}) => trackBooking(event, { formula: state.formula, ...extra });
+const submitLabel = () => state.preview ? 'Tester le parcours' : 'Envoyer ma demande';
 
 function showAlert(message) { $('#booking-alert').textContent = message; $('#booking-alert').hidden = !message; }
 function showStep(step) {
@@ -63,6 +70,7 @@ function updateGroup() {
   } else {
     $('#capacity-note').textContent = state.age < 14 ? 'Un adulte accompagne les enfants pendant les parties. Il est déjà compté dans la capacité.' : 'L’effectif indiqué comprend bien l’enfant qui fête son anniversaire.';
     $('#calendar-status').textContent = 'Recherche des créneaux adaptés à votre groupe…';
+    track('booking_group');
   }
   renderCalendar();
   savePreferences();
@@ -127,6 +135,7 @@ async function loadMonth() {
   $('#calendar-status').textContent = 'Recherche des disponibilités du mois…';
   renderCalendar();
   const timeout = setTimeout(() => controller.abort(), 25000);
+  const startedAt = performance.now();
   try {
     const params = new URLSearchParams({ month: state.month, formula: state.formula, age: state.age, children: state.children });
     const response = await fetch(`/api/birthday-availability?${params}`, { signal: controller.signal, cache: 'no-store' });
@@ -140,12 +149,14 @@ async function loadMonth() {
     $('#calendar-mode').textContent = payload.source === 'demo'
       ? 'PRÉVERSION DE TEST — Calendrier fictif pour essayer le parcours. Aucune réservation réelle.'
       : payload.preview ? 'PRÉVERSION — Lecture de Google Agenda. Les réservations restent simulées.'
-      : 'Planning Google Agenda — Réservation en ligne en préparation. Contactez-nous pour réserver.';
+      : 'Planning à jour — Choisissez un créneau, puis envoyez votre demande. Notre équipe vous confirmera la réservation par e-mail.';
     const available = state.days.filter((day) => day.status === 'available' && matchesFilter(day.date));
     $('#calendar-status').textContent = payload.source === 'demo'
       ? `${available.length} dates proposées dans ce calendrier fictif. Les jours complets servent aussi à tester le parcours.`
       : `${available.length} dates avec des créneaux possibles · Google Agenda vérifié à ${new Intl.DateTimeFormat('fr-FR', { timeZone: 'Europe/Paris', hour: '2-digit', minute: '2-digit' }).format(new Date(payload.checkedAt))}. Capacité d’accueil à confirmer avec l’équipe.`;
     if (!available.length) $('#calendar-status').textContent += ' Essayez un autre filtre ou le mois suivant.';
+    track('booking_availability', { result: available.length ? 'available' : 'empty', latency: performance.now() - startedAt < 2000 ? 'under_2s' : performance.now() - startedAt < 5000 ? '2_5s' : 'over_5s' });
+    if (!available.length) track('booking_no_slots');
     const selected = state.days.find((day) => day.date === state.date && matchesFilter(day.date) && ['available', 'request'].includes(day.status));
     state.date = selected?.date || '';
     if (state.date) renderSlots();
@@ -157,6 +168,7 @@ async function loadMonth() {
     $('#calendar-mode').textContent = 'Planning indisponible — aucun créneau ne peut être confirmé.';
     $('#calendar-status').textContent = error.name === 'AbortError' ? 'La lecture prend trop de temps. Utilisez « Actualiser le planning » pour réessayer.' : error.message;
     $('#slots-status').textContent = 'Réessayez ou appelez-nous au 06 07 72 81 64.';
+    track('booking_error', { stage: 'calendar', reason: error.name === 'AbortError' ? 'calendar_timeout' : 'calendar_unavailable' });
   } finally {
     clearTimeout(timeout);
     if (requestRevision === revision) { state.loading = false; renderCalendar(); }
@@ -164,6 +176,7 @@ async function loadMonth() {
 }
 
 function selectDate(date) {
+  track('booking_date_selected');
   state.date = date;
   resetChoice();
   renderCalendar();
@@ -179,14 +192,14 @@ function renderSlots() {
   const list = $('#slot-list'); list.replaceChildren();
   for (const slot of day.slots) {
     const onRequest = slot.status === 'request' || state.bookingMode === 'request_only';
-    const button = document.createElement(onRequest ? 'a' : 'button');
+    const button = document.createElement('button');
     button.className = `slot ${onRequest ? 'request' : ''}`;
     button.textContent = slot.startTime;
     const detail = document.createElement('small');
     detail.textContent = `Fin vers ${endTime(slot.startTime, day.quote.durationMinutes)}${onRequest ? ' · sur demande' : ''}`;
     button.append(detail);
-    if (onRequest) button.href = '/anniversaires.html#demande';
-    else { button.type = 'button'; button.addEventListener('click', () => selectSlot(slot.startTime, day.quote)); }
+    button.type = 'button';
+    button.addEventListener('click', () => selectSlot(slot.startTime, day.quote));
     list.append(button);
   }
   const quote = $('#date-quote'); quote.hidden = false;
@@ -206,37 +219,71 @@ function renderSlots() {
 }
 
 function selectSlot(startTime, quote) {
+  track('booking_slot_selected');
   state.startTime = startTime;
   state.quote = quote;
   state.idempotencyKey = crypto.randomUUID();
   $('#booking-summary').textContent = `${formatDate(state.date)} · arrivée à ${startTime}, fin vers ${endTime(startTime, quote.durationMinutes)} · ${quote.label} · environ ${state.children} enfants de ${state.age} ans.`;
   $('#booking-price').textContent = `${euro(quote.totalEstimate)} estimés · ${euro(quote.unitPrice)} par enfant${quote.fridayOffer ? ' · offre du vendredi' : ''}`;
-  $('#confirm-booking').textContent = 'Tester la réservation';
+  $('#confirm-booking').textContent = submitLabel();
+  $('#contact-mode').textContent = state.preview ? 'Test uniquement : aucune demande ne sera envoyée.' : 'Votre demande n’est pas encore une réservation confirmée. Nous vérifions l’organisation et vous répondons par e-mail.';
   showStep(2);
+  track('booking_contact_view');
 }
 
 async function submitBooking(event) {
   event.preventDefault();
+  if (submitting || submissionUncertain) return;
   const form = event.currentTarget;
   if (!form.reportValidity() || !state.quote) return;
+  submitting = true;
+  track('booking_submit');
   const button = $('#confirm-booking');
   button.disabled = true;
+  $$('[data-back]').forEach((item) => { item.disabled = true; });
   button.textContent = 'Vérification du créneau…';
   const values = new FormData(form);
   const data = { parentName: values.get('parentName'), childName: values.get('childName'), email: values.get('email'), phone: values.get('phone'), website: values.get('website'), date: state.date, startTime: state.startTime, formula: state.formula, age: state.age, children: state.children, shareConsent: values.get('shareConsent') === 'on', paymentConsent: values.get('paymentConsent') === 'on', expectedUnitPrice: state.quote.unitPrice, idempotencyKey: state.idempotencyKey };
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 25000);
+  let transmissionStarted = false;
   try {
     const response = await fetch('/api/book-birthday', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data), signal: controller.signal });
     const payload = await response.json();
-    if (!response.ok) throw new Error(payload.error || 'Impossible de vérifier ce créneau.');
-    if (!payload.preview || !payload.ok || !payload.bookingId) throw new Error('Résultat inattendu : contactez notre équipe avant de recommencer.');
-    $('#success-summary').textContent = `Parcours testé pour ${values.get('childName')} : ${formatDate(payload.date)} à ${payload.startTime}, ${payload.formula}, ${euro(payload.unitPrice)} par enfant, soit ${euro(payload.totalEstimate)} estimés.`;
+    if (!response.ok) { if (response.status === 409) track('booking_error', { stage: 'submit', reason: 'slot_changed' }); throw new Error(payload.error || 'Impossible de vérifier ce créneau.'); }
+    if (!payload.ok || !payload.bookingId || payload.preview !== state.preview || (!payload.preview && payload.bookingMode !== 'request_only')) throw new Error('Résultat inattendu : contactez notre équipe avant de recommencer.');
+    if (!payload.preview) {
+      button.textContent = 'Transmission de votre demande…';
+      const fields = new URLSearchParams({
+        'form-name': 'anniversaire', 'bot-field': String(values.get('website') || ''),
+        nom: String(data.parentName), prenom_enfant: String(data.childName), email: String(data.email), telephone: String(data.phone),
+        date_souhaitee: payload.date, heure_souhaitee: payload.startTime, age_enfant: String(data.age), nombre_enfants: String(data.children),
+        formule: `${payload.formula} (${payload.unitPrice} € / enfant)`, tarif_estime: `${payload.totalEstimate} €`,
+        reference_demande: payload.bookingId, source_demande: 'Calendrier en ligne — demande à confirmer',
+        partage_accepte: 'Oui — groupe d’âge compatible, table séparée', paiement_accepte: 'Sur place après l’anniversaire, aucun acompte',
+      });
+      transmissionStarted = true;
+      const sent = await fetch('/demande-recue', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: fields.toString(), signal: controller.signal });
+      const receipt = await sent.text();
+      if (!sent.ok || !receipt.includes('lgt-request-receipt-v1')) throw new Error('La réception n’a pas pu être vérifiée.');
+      track('generate_lead');
+    }
+    $('#success-kicker').textContent = payload.preview ? 'Test du parcours' : 'Demande transmise';
+    $('#success-title').textContent = payload.preview ? 'Simulation réussie.' : 'Merci, nous avons votre demande.';
+    $('#success-summary').textContent = `${payload.preview ? 'Parcours testé' : 'Demande'} pour ${values.get('childName')} : ${formatDate(payload.date)} à ${payload.startTime}, ${payload.formula}, ${euro(payload.unitPrice)} par enfant, soit ${euro(payload.totalEstimate)} estimés.`;
+    $('#success-promise').textContent = payload.preview ? 'Aucune réservation réelle : ce test n’ajoute rien à l’agenda ni au registre et n’envoie aucun e-mail.' : 'La réservation sera définitive après notre confirmation par e-mail. Le créneau n’est pas encore bloqué. Pas de paiement en ligne : vous réglerez sur place après l’anniversaire.';
     $('#booking-reference').textContent = payload.bookingId;
     // A preview must never emit a real lead/conversion event.
     showStep(3);
-  } catch (error) { showAlert(error.name === 'AbortError' ? 'Le test prend trop de temps. Vos coordonnées sont conservées ; vous pouvez réessayer.' : error.message); }
-  finally { clearTimeout(timeout); button.disabled = false; button.textContent = 'Tester la réservation'; }
+  } catch (error) {
+    submissionUncertain = transmissionStarted;
+    if (transmissionStarted) {
+      showAlert('La réception de votre demande est incertaine. Pour éviter un doublon, ne la renvoyez pas : appelez-nous au 06 07 72 81 64 pour vérifier. Vos informations restent affichées ici.');
+      $$('[data-back]').forEach((item) => { item.disabled = true; });
+    } else showAlert(error.name === 'AbortError' ? 'La vérification prend trop de temps. Vos coordonnées sont conservées ; vous pouvez réessayer.' : error.message);
+    track('booking_error', { stage: 'submit', reason: transmissionStarted ? 'submit_uncertain' : 'submit_failed' });
+  }
+  finally { clearTimeout(timeout); submitting = false; button.disabled = submissionUncertain || state.step === 3; button.textContent = submissionUncertain ? 'Réception à vérifier par téléphone' : submitLabel(); $$('[data-back]').forEach((item) => { item.disabled = submissionUncertain; }); }
 }
 
 function syncFilters() {
@@ -255,10 +302,18 @@ function initialize() {
   if (['all', 'friday', 'wednesday', 'weekend'].includes(filter)) state.filter = filter;
   const date = params.get('date') || saved.date || '';
   if (/^\d{4}-\d{2}-\d{2}$/.test(date) && !Number.isNaN(Date.parse(`${date}T12:00:00Z`)) && date > parisToday() && date <= shiftDate(parisToday(), 120)) { state.date = date; state.month = date.slice(0, 7); }
-  $('#calendar-mode').textContent = 'Parcours de réservation en préparation — aucune réservation réelle depuis cette version.';
+  $('#calendar-mode').textContent = 'Choisissez votre groupe pour consulter le planning à jour. Aucun paiement en ligne.';
+  const trackOpen = () => { if (!openTracked) openTracked = track('booking_open'); };
+  trackOpen();
+  window.addEventListener('lgt-consent-change', trackOpen);
   syncFilters();
   updateGroup();
   $('#booking-form').addEventListener('submit', submitBooking);
+  $('#booking-form').addEventListener('input', () => { if (!formStarted) { formStarted = true; track('booking_form_start'); } });
+  $('#booking-form').addEventListener('invalid', (event) => track('booking_validation_error', { stage: 'contact', field: event.target.name }), true);
+  $$('a[href^="tel:"]').forEach((link) => link.addEventListener('click', () => track('booking_help', { stage: state.step === 1 ? 'calendar' : 'contact', reason: 'phone' })));
+  $('.slot-help a').addEventListener('click', () => track('booking_help', { reason: 'personalized', stage: 'calendar' }));
+  $$('[data-help-reason]').forEach((button) => button.addEventListener('click', () => { track('booking_help', { reason: button.dataset.helpReason, stage: state.step === 1 ? 'calendar' : 'contact' }); $('#help-response').textContent = 'Merci. Vous pouvez nous appeler au 06 07 72 81 64 ou utiliser la demande personnalisée si vous souhaitez une réponse.'; }));
   [$('#age'), $('#children')].forEach((input) => input.addEventListener('input', updateGroup));
   $$('input[name="formula"]').forEach((input) => input.addEventListener('change', updateGroup));
   $('#mobile-formula').addEventListener('change', (event) => { $(`input[name="formula"][value="${event.target.value}"]`).checked = true; updateGroup(); });
@@ -268,6 +323,7 @@ function initialize() {
   });
   $$('[data-filter]').forEach((button) => button.addEventListener('click', () => {
     state.filter = button.dataset.filter; syncFilters();
+    track('booking_filter', { day_filter: state.filter });
     if (state.date && !matchesFilter(state.date)) { state.date = ''; resetChoice(); $('#selected-date-label').textContent = 'Choisissez une date'; $('#slots-status').textContent = 'Sélectionnez un jour dans le calendrier.'; }
     renderCalendar(); savePreferences();
     if (groupIsValid()) { const count = state.days.filter((day) => matchesFilter(day.date) && day.status === 'available').length; $('#calendar-status').textContent = `${count} dates proposées avec ce filtre${state.source === 'demo' ? ' · calendrier fictif' : ''}.`; }

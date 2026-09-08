@@ -91,6 +91,7 @@
       var choice = button.getAttribute('data-consent');
       saveChoice(choice);
       updateGoogleConsent(choice);
+      window.dispatchEvent(new CustomEvent('lgt-consent-change', { detail: { choice: choice } }));
       if (choice === 'rejected') deleteAnalyticsCookies();
       hideBanner();
     });

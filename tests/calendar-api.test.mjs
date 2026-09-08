@@ -38,7 +38,7 @@ test('Google non configuré ne devient jamais un agenda vide disponible', async 
 
 test('la simulation calcule le prix côté serveur et ne crée pas de doublon de référence', async () => {
   const first = await booking(request(valid), preview);
-  assert.equal(first.status, 201);
+  assert.equal(first.status, 200);
   const receipt = await first.json();
   assert.equal(receipt.totalEstimate, 90);
   assert.equal(receipt.preview, true);
@@ -85,4 +85,29 @@ test('Google : toutes les pages, fuseau Paris et accès en lecture seule', async
   };
   try { assert.deepEqual((await listEvents('2026-10-01', '2026-10-31')).map((item) => item.id), ['first', 'second']); assert.equal(urls.length, 3); }
   finally { globalThis.fetch = originalFetch; env.clear(); }
+});
+
+test('production : une demande revérifiée ne réserve rien et ne poste jamais dans Google', async () => {
+  const originalFetch = globalThis.fetch;
+  const { privateKey } = generateKeyPairSync('rsa', { modulusLength: 2048 });
+  env.set('BOOKING_REQUESTS_ENABLED', 'true');
+  env.set('GOOGLE_SERVICE_ACCOUNT_EMAIL', 'test@example.invalid');
+  env.set('GOOGLE_PRIVATE_KEY', privateKey.export({ type: 'pkcs8', format: 'pem' }));
+  const calls = [];
+  globalThis.fetch = async (url, options) => {
+    calls.push({ url: String(url), method: options?.method || 'GET' });
+    if (String(url).includes('oauth2')) return Response.json({ access_token: 'fake-test-token' });
+    assert.equal(options?.method || 'GET', 'GET');
+    return Response.json({ items: [] });
+  };
+  try {
+    const response = await booking(request(valid), { deploy: { context: 'production' } });
+    assert.equal(response.status, 200);
+    const data = await response.json();
+    assert.equal(data.preview, false);
+    assert.equal(data.bookingMode, 'request_only');
+    assert.match(data.bookingId, /^DEM-/);
+    assert.ok(calls.some((call) => call.url.includes('/calendar/')));
+    assert.ok(calls.every((call) => call.method === 'GET' || call.url.includes('oauth2')));
+  } finally { globalThis.fetch = originalFetch; env.clear(); }
 });

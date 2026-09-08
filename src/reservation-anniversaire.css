@@ -53,6 +53,7 @@ h1{font-size:clamp(1.9rem,4vw,3rem);max-width:22ch;margin:8px 0 12px}
 @media(max-width:380px){.slot-list{grid-template-columns:1fr 1fr}.steps li{font-size:.6rem}.brand{font-size:.78rem}.phone{font-size:.7rem}.settings-panel,.calendar-panel{padding:12px}}
 
 .mobile-formula-field{display:none}.booking-details{border-top:1px solid var(--line);margin-top:18px;padding-top:14px;font-size:.8rem;color:var(--dim)}.booking-details summary{cursor:pointer;color:var(--sand)}.booking-details p{margin-top:12px}
+.slot.request{cursor:pointer;border-color:#4ea8ff;color:var(--sand)}
 @media(max-width:760px){
   .mobile-formula-field{display:block;margin-bottom:12px}.mobile-formula-field select{width:100%;font:inherit;font-size:.8rem;background:var(--void);border:1px solid var(--line);border-radius:4px;color:var(--sand);padding:10px 6px}
   .settings-panel .formula-picker,.settings-panel .panel-heading,.settings-panel .included-note{display:none}

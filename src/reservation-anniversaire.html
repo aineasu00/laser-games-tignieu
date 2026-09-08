@@ -24,14 +24,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Réserver un anniversaire en ligne — Laser Games Tignieu</title>
-<meta name="description" content="Choisissez votre formule, consultez les créneaux disponibles et réservez directement l’anniversaire de votre enfant au Laser Games Tignieu. Paiement sur place le jour de la fête.">
+<meta name="description" content="Consultez le planning à jour, choisissez votre créneau et envoyez votre demande d’anniversaire au Laser Games Tignieu. Confirmation par e-mail, paiement sur place après la fête.">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#0B0E13">
 <link rel="canonical" href="https://lasergamestignieu.com/reservation-anniversaire.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Laser Games Tignieu">
 <meta property="og:title" content="Réserver un anniversaire — Laser Games Tignieu">
-<meta property="og:description" content="Un calendrier simple pour choisir une formule et réserver un créneau disponible. Aucun paiement en ligne.">
+<meta property="og:description" content="Consultez le planning à jour et envoyez votre demande d’anniversaire. Confirmation par notre équipe, aucun paiement en ligne.">
 <meta property="og:url" content="https://lasergamestignieu.com/reservation-anniversaire.html">
 <meta property="og:image" content="https://d8j0ntlcm91z4.cloudfront.net/user_3BhKyG6aqunct5eu5AhqQ2xMWu6/hf_20260706_140304_ec7765c7-1e4b-49e6-9cfd-798d5edf4669.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -80,7 +80,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <ol class="steps" aria-label="Étapes de réservation">
         <li class="active" data-step-indicator="1"><span>1</span> Votre créneau</li>
         <li data-step-indicator="2"><span>2</span> Vos coordonnées</li>
-        <li data-step-indicator="3"><span>3</span> Confirmation</li>
+        <li data-step-indicator="3"><span>3</span> Demande reçue</li>
       </ol>
 
       <div id="booking-alert" class="alert" role="alert" hidden></div>
@@ -154,7 +154,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             </div>
             <div class="weekdays" aria-hidden="true"><span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span><span>Sam</span><span>Dim</span></div>
             <div id="calendar-grid" class="calendar-grid" role="group" aria-label="Calendrier des dates"></div>
-            <p class="calendar-legend"><span class="legend-available">● Disponible</span><span>— Fermé</span><span>× Complet</span><span>? Sur demande</span></p>
+            <p class="calendar-legend"><span class="legend-available">● Créneaux possibles</span><span>— Fermé</span><span>× Complet</span><span>? À étudier</span></p>
           </div>
           <div class="slots-card">
             <h3 id="selected-date-label">Sélectionnez une date</h3>
@@ -177,6 +177,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           <p id="booking-summary"></p>
           <p class="summary-price" id="booking-price"></p>
           <p>Aucun paiement aujourd’hui. Vous réglez sur place après l’anniversaire, selon le nombre d’enfants réellement présents.</p>
+          <p id="contact-mode" class="capacity-note">Votre demande sera confirmée par notre équipe après vérification de l’organisation.</p>
         </div>
         <form id="booking-form">
           <input class="honeypot" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
@@ -190,7 +191,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           <label class="check"><input name="paymentConsent" type="checkbox" required><span>J’ai compris qu’il n’y a ni paiement en ligne ni acompte. Le règlement se fera sur place après l’anniversaire, selon le nombre d’enfants présents.</span></label>
           <div class="actions split-actions">
             <button class="button ghost" data-back="1" type="button">Changer de créneau</button>
-            <button class="button" id="confirm-booking" type="submit">Tester la réservation</button>
+            <button class="button" id="confirm-booking" type="submit">Envoyer ma demande</button>
           </div>
           <p class="privacy">Vos coordonnées servent uniquement à organiser cette réservation. Aucune donnée personnelle n’est transmise à nos outils de mesure d’audience.</p>
         </form>
@@ -198,14 +199,27 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
       <section class="panel success-panel" data-step="3" aria-labelledby="success-title" hidden>
         <div class="success-mark" aria-hidden="true">✓</div>
-        <p class="kicker">Test du parcours</p>
+        <p class="kicker" id="success-kicker">Demande transmise</p>
         <h2 id="success-title">Simulation réussie.</h2>
         <p id="success-summary" class="success-summary"></p>
-        <div class="promise compact"><p><strong>Aucune réservation réelle n’a été créée.</strong></p><p>Ce test n’ajoute rien à l’agenda ou au registre et n’envoie aucun e-mail.</p></div>
+        <div class="promise compact"><p id="success-promise">La réservation sera définitive après notre confirmation par e-mail.</p></div>
         <p class="booking-reference">Référence : <strong id="booking-reference"></strong></p>
         <a class="button ghost" href="/">Retour à l’accueil</a>
       </section>
     </div>
+  </section>
+  <section class="wrap" aria-labelledby="help-title">
+    <details class="booking-details"><summary id="help-title">Une difficulté avec ce parcours ?</summary>
+      <p>Pour nous aider à améliorer cet outil, indiquez ce qui vous manque. Cette indication anonyme n’est mesurée que si vous acceptez les cookies statistiques ; elle ne déclenche pas de rappel.</p>
+      <div class="day-filters">
+        <button type="button" data-help-reason="no_slot">Je ne trouve pas de créneau</button>
+        <button type="button" data-help-reason="payment">Une question sur le paiement</button>
+        <button type="button" data-help-reason="sharing">Une question sur le partage</button>
+        <button type="button" data-help-reason="other">Autre difficulté</button>
+      </div>
+      <p id="help-response" role="status"></p>
+      <p>Besoin d’une réponse ? <a href="tel:+33607728164">Appelez le 06 07 72 81 64</a>.</p>
+    </details>
   </section>
 </main>
 

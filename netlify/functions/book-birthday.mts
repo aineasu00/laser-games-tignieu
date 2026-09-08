@@ -8,9 +8,10 @@ const text = (value: unknown, max: number) => String(value || "").trim().replace
 
 export default async (request: Request, context: Context) => {
   if (request.method !== "POST") return json({ error: "Méthode non autorisée." }, 405);
-  // Production writes stay disabled until transactional capacity control and
-  // the actual Google/Sheets integration have been validated. No Blobs pseudo-lock.
-  if (context.deploy?.context === "production") return json({ error: "La réservation en ligne n’est pas encore ouverte. Notre équipe vous répond au 06 07 72 81 64." }, 503);
+  const preview = context.deploy?.context !== "production";
+  // Phase 1 validates a REQUEST only. It never reserves equipment or writes an
+  // event. Netlify Forms receives the request after this final calendar check.
+  if (!preview && Netlify.env.get("BOOKING_REQUESTS_ENABLED") !== "true") return json({ error: "Les demandes en ligne sont momentanément suspendues. Appelez-nous au 06 07 72 81 64." }, 503);
   if (!request.headers.get("content-type")?.includes("application/json")) return json({ error: "Format invalide." }, 415);
   let raw: Record<string, unknown>;
   try {
@@ -36,12 +37,12 @@ export default async (request: Request, context: Context) => {
   try {
     const { events, source } = await readCalendar(data.date, data.date, context);
     const slot = buildAvailability({ date: data.date, formulaKey: data.formula, age: data.age, children: data.children, events }).find((item) => item.startTime === data.startTime);
-    if (!slot || !["instant", "instant_shared"].includes(slot.status)) return json({ error: "Ce créneau n’est plus disponible pour votre groupe. Choisissez une autre heure ; vos coordonnées sont conservées." }, 409);
+    if (!slot || slot.status === "unavailable") return json({ error: "Ce créneau n’est plus disponible pour votre groupe. Choisissez une autre heure ; vos coordonnées sont conservées." }, 409);
     const quote = quoteBooking(data.date, data.formula, data.children);
     if (raw.expectedUnitPrice !== quote.unitPrice) return json({ error: "Le tarif a changé. Consultez le récapitulatif actualisé avant de continuer." }, 409);
     // Deterministic test receipt; no personal data, event, email, or row stored.
     const reference = createHash("sha256").update(JSON.stringify(data)).digest("hex").slice(0, 12).toUpperCase();
-    return json({ ok: true, preview: true, source, bookingId: `TEST-${reference}`, date: data.date, startTime: data.startTime, formula: quote.label, ...quote, payment: "Simulation uniquement : aucune réservation réelle ni aucun e-mail créé." }, 201);
+    return json({ ok: true, preview, source, bookingMode: preview ? "simulation" : "request_only", bookingId: `${preview ? "TEST" : "DEM"}-${reference}`, date: data.date, startTime: data.startTime, formula: quote.label, ...quote, payment: preview ? "Simulation uniquement : aucune réservation réelle ni aucun e-mail créé." : "Paiement sur place après l’anniversaire. Demande à transmettre, réservation non confirmée." }, 200);
   } catch {
     return json({ error: "Impossible de vérifier le créneau. Réessayez ; vos informations sont conservées." }, 503);
   }

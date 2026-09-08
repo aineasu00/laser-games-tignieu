@@ -41,3 +41,10 @@ test("les durées métier et le sitemap sont cohérents", () => {
   assert.doesNotMatch(booking, /rotations? de 30 minutes/);
   assert.match(sitemap, /reservation-anniversaire\.html/);
 });
+
+test('le formulaire Netlify retourne le reçu attendu et déclare les champs du calendrier', () => {
+  const form = read('src/anniversaires.html');
+  assert.match(form, /name="anniversaire"[^>]*action="\/demande-recue"/);
+  assert.match(read('src/demande-recue.html'), /lgt-request-receipt-v1/);
+  for (const field of ['heure_souhaitee', 'reference_demande', 'source_demande', 'tarif_estime', 'partage_accepte', 'paiement_accepte']) assert.ok(form.includes(`name="${field}"`));
+});

@@ -1,6 +1,6 @@
 # Connexion du calendrier de réservation à Google Agenda
 
-État du 8 septembre 2026 : connexion Google configurée et vérifiée dans le contexte Netlify `deploy-preview`. La prévisualisation lit l’agenda réel mais ne crée encore ni événement, ni ligne Sheets, ni e-mail.
+État du 8 septembre 2026 : connexion Google configurée en `deploy-preview` et `production`. La prévisualisation reste simulée. La production recueille des demandes réelles via Netlify Forms, à confirmer humainement, sans événement ni ligne Sheets automatique. Voir `OUVERTURE-PROGRESSIVE.md`.
 
 ## Accès à préparer
 

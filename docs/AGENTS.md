@@ -70,5 +70,5 @@ Le site doit générer des réservations par téléphone, des inscriptions à l'
 - Présenter 20 minutes de jeu + environ 10 minutes de préparation, jamais 30 minutes de jeu.
 - Disponibilités mensuelles calculées par le serveur. Google peut être lu depuis la préversion avec un compte de service et `BOOKING_PREVIEW_READ_CALENDAR=true`.
 - Le mode fictif est clairement signalé. Une panne Google ne doit pas ouvrir artificiellement tous les créneaux.
-- Réservations réelles désactivées dans le serveur et l’interface. La simulation ne stocke pas de coordonnées, n’envoie pas d’e-mail et ne déclenche aucune conversion.
+- Phase 1 de production : demandes réelles via le formulaire Netlify `anniversaire` existant, avec heure/date et référence. Confirmation humaine uniquement ; aucun événement ou statut confirmé écrit automatiquement. Préversion toujours simulée, sans collecte ni conversion. Voir `OUVERTURE-PROGRESSIVE.md`.
 - Il reste à valider la gestion transactionnelle des places, le matériel par type, l’accueil et la synchronisation commerciale avant d’activer des écritures réelles. Ne jamais utiliser un verrou Blobs non atomique comme garantie anti-surréservation.

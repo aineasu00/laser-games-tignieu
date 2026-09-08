@@ -31,7 +31,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Anniversaire enfant à Tignieu (38) — Laser Games Tignieu · Formules dès 16 €</title>
-<meta name="description" content="Fêtez l'anniversaire de votre enfant au laser game de Tignieu : parties, crêpe party, boissons et cadeaux. Formules dès 16 €/enfant et réservation directe en ligne.">
+<meta name="description" content="Fêtez l'anniversaire de votre enfant au laser game de Tignieu : parties, crêpe party, boissons et cadeaux. Consultez le planning et envoyez votre demande en ligne.">
 <link rel="canonical" href="https://lasergamestignieu.com/anniversaires.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Laser Games Tignieu">
@@ -303,7 +303,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
     </div>
     <p class="price-note">À partir de 6 ans · minimum 5 enfants · sur réservation. Vous pouvez apporter le gâteau d'anniversaire — tout le reste est compris dans la formule.</p>
-    <a class="btn" style="margin-top:18px" href="/reservation-anniversaire.html">Réserver directement</a>
+    <a class="btn" style="margin-top:18px" href="/reservation-anniversaire.html">Choisir un créneau</a>
   </div>
 </section>
 
@@ -339,7 +339,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="rule-card">
         <div class="rule-num">01</div>
         <h3>Vous choisissez un créneau</h3>
-        <p>Consultez le planning et réservez immédiatement un horaire simple. Pour un besoin particulier, le formulaire reste disponible.</p>
+        <p>Consultez le planning à jour et envoyez votre demande avec le créneau choisi. Notre équipe vous confirmera la réservation par e-mail. Pour un besoin particulier, le formulaire reste disponible.</p>
       </div>
       <div class="rule-card">
         <div class="rule-num">02</div>
@@ -361,8 +361,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <p class="eyebrow">Besoin particulier</p>
     <h2>Vous ne trouvez pas le bon créneau ?</h2>
     <p class="lede">Groupe important, doute sur la formule ou horaire particulier : envoyez-nous votre demande et nous vous recontactons.</p>
-    <form name="anniversaire" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/anniversaires.html#demande" onsubmit="try{ttq.track('SubmitForm',{content_name:'anniversaire'});}catch(e){}">
+    <form name="anniversaire" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/demande-recue" onsubmit="try{ttq.track('SubmitForm',{content_name:'anniversaire'});}catch(e){}">
       <input type="hidden" name="form-name" value="anniversaire">
+      <input type="hidden" name="heure_souhaitee">
+      <input type="hidden" name="reference_demande">
+      <input type="hidden" name="source_demande" value="Formulaire anniversaire classique">
+      <input type="hidden" name="tarif_estime">
+      <input type="hidden" name="partage_accepte">
+      <input type="hidden" name="paiement_accepte">
       <p style="display:none"><label>Ne pas remplir : <input name="bot-field"></label></p>
       <div>
         <label for="f-nom">Votre prénom et nom</label>
