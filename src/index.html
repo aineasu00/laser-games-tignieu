@@ -88,6 +88,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     {"@type":"OpeningHoursSpecification","dayOfWeek":"Sunday","opens":"10:30","closes":"12:00"},
     {"@type":"OpeningHoursSpecification","dayOfWeek":"Sunday","opens":"13:30","closes":"20:00"}
   ],
+  "specialOpeningHoursSpecification": [
+    {"@type":"OpeningHoursSpecification","validFrom":"2026-09-13","validThrough":"2026-09-13","opens":"13:30","closes":"20:00"},
+    {"@type":"OpeningHoursSpecification","validFrom":"2026-09-19","validThrough":"2026-09-19","opens":"13:30","closes":"22:00"}
+  ],
   "amenityFeature": [
     {"@type":"LocationFeatureSpecification","name":"Accès PMR","value":true},
     {"@type":"LocationFeatureSpecification","name":"Bar sur place","value":true},
@@ -287,6 +291,7 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 }(window, document, 'ttq');
 </script>
 <!-- TikTok Pixel Code End -->
+<script defer src="/exceptional-hours.js"></script>
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -319,6 +324,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <a href="battle-royale.html">⚡ Battle Royale</a>
   </nav>
 </header>
+
+<aside class="exceptional-hours" aria-label="Horaires exceptionnels" style="background:#F2C40F;color:#0B0E13;padding:14px 20px;text-align:center;line-height:1.6">
+  <strong>Ouverture à 13 h 30</strong> — Dimanche 13 et samedi 19 septembre 2026 : fermeture exceptionnelle le matin, y compris pour les anniversaires.
+</aside>
+
 
 <!-- ================= HERO : L'AIRLOCK ================= -->
 <section class="hero" id="top" style="padding:0">
@@ -521,6 +531,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="infos-grid">
       <div class="info-block">
         <h3>Horaires hors vacances scolaires</h3>
+        <p class="exceptional-hours" style="color:var(--hazard);margin-bottom:16px"><strong>Exception les 13 et 19 septembre 2026 :</strong> fermé le matin, ouverture à 13 h 30.</p>
         <dl class="opening-hours">
           <div><dt>Lundi</dt><dd>Fermé</dd></div>
           <div><dt>Mardi</dt><dd>Fermé</dd></div>
