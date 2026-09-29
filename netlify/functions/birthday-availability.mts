@@ -16,7 +16,7 @@ export default async (request: Request, context: Context) => {
   const latest = shiftDate(today, 120);
   if (!getFormula(formulaKey)) return json({ error: "Choisissez une formule." }, 400);
   if (!Number.isInteger(age) || age < 6 || age > 17) return json({ error: "Indiquez l’âge fêté, entre 6 et 17 ans." }, 400);
-  if (!Number.isInteger(children) || children < 5 || equipmentNeeded(children, age) > 17) return json({ error: "Pour ce groupe, notre équipe vous propose une organisation adaptée au 06 07 72 81 64." }, 400);
+  if (!Number.isInteger(children) || children < 5 || equipmentNeeded(children, age) > 17) return json({ error: "Pour ce groupe, notre équipe vous propose une organisation adaptée au 07 44 22 78 63." }, 400);
   if ((date && month) || (!date && !month)) return json({ error: "Choisissez une date ou un mois." }, 400);
   let firstDate: string;
   let lastDate: string;
@@ -41,7 +41,7 @@ export default async (request: Request, context: Context) => {
   } catch (error) {
     const diagnostic = error instanceof Error ? error.message : String(error);
     console.error(`Birthday availability calendar read failed: ${diagnostic}`);
-    return json({ error: "Le planning n’est pas accessible pour le moment. Réessayez ou appelez-nous au 06 07 72 81 64.", source: "unavailable" }, 503);
+    return json({ error: "Le planning n’est pas accessible pour le moment. Réessayez ou appelez-nous au 07 44 22 78 63.", source: "unavailable" }, 503);
   }
 };
 

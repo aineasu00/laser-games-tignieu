@@ -11,7 +11,7 @@ export default async (request: Request, context: Context) => {
   const preview = context.deploy?.context !== "production";
   // Phase 1 validates a REQUEST only. It never reserves equipment or writes an
   // event. Netlify Forms receives the request after this final calendar check.
-  if (!preview && Netlify.env.get("BOOKING_REQUESTS_ENABLED") !== "true") return json({ error: "Les demandes en ligne sont momentanément suspendues. Appelez-nous au 06 07 72 81 64." }, 503);
+  if (!preview && Netlify.env.get("BOOKING_REQUESTS_ENABLED") !== "true") return json({ error: "Les demandes en ligne sont momentanément suspendues. Appelez-nous au 07 44 22 78 63." }, 503);
   if (!request.headers.get("content-type")?.includes("application/json")) return json({ error: "Format invalide." }, 415);
   let raw: Record<string, unknown>;
   try {

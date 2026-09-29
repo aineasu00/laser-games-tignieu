@@ -37,7 +37,7 @@ git push origin main
 
 ## 📞 Contact
 
-- Téléphone : 06 07 72 81 64
+- Téléphone : 07 44 22 78 63
 - Adresse : 60 Route de Crémieu, 38230 Tignieu-Jameyzieu
 
 Déploiement continu activé via GitHub → Netlify.

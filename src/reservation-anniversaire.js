@@ -65,7 +65,7 @@ function updateGroup() {
     $('#capacity-note').textContent = 'Une estimation suffit. Vous pourrez nous signaler les changements.';
     $('#calendar-status').textContent = 'Indiquez l’âge et le nombre d’enfants pour afficher les disponibilités de votre groupe.';
   } else if (!groupIsValid()) {
-    $('#capacity-note').textContent = 'Pour ce groupe, appelez-nous au 06 07 72 81 64 : nous étudierons une organisation adaptée.';
+    $('#capacity-note').textContent = 'Pour ce groupe, appelez-nous au 07 44 22 78 63 : nous étudierons une organisation adaptée.';
     $('#calendar-status').textContent = 'Le calendrier direct ne peut pas proposer de créneau pour cet effectif ou cet âge.';
   } else {
     $('#capacity-note').textContent = state.age < 14 ? 'Un adulte accompagne les enfants pendant les parties. Il est déjà compté dans la capacité.' : 'L’effectif indiqué comprend bien l’enfant qui fête son anniversaire.';
@@ -167,7 +167,7 @@ async function loadMonth() {
     state.source = null;
     $('#calendar-mode').textContent = 'Planning indisponible — aucun créneau ne peut être confirmé.';
     $('#calendar-status').textContent = error.name === 'AbortError' ? 'La lecture prend trop de temps. Utilisez « Actualiser le planning » pour réessayer.' : error.message;
-    $('#slots-status').textContent = 'Réessayez ou appelez-nous au 06 07 72 81 64.';
+    $('#slots-status').textContent = 'Réessayez ou appelez-nous au 07 44 22 78 63.';
     track('booking_error', { stage: 'calendar', reason: error.name === 'AbortError' ? 'calendar_timeout' : 'calendar_unavailable' });
   } finally {
     clearTimeout(timeout);
@@ -278,7 +278,7 @@ async function submitBooking(event) {
   } catch (error) {
     submissionUncertain = transmissionStarted;
     if (transmissionStarted) {
-      showAlert('La réception de votre demande est incertaine. Pour éviter un doublon, ne la renvoyez pas : appelez-nous au 06 07 72 81 64 pour vérifier. Vos informations restent affichées ici.');
+      showAlert('La réception de votre demande est incertaine. Pour éviter un doublon, ne la renvoyez pas : appelez-nous au 07 44 22 78 63 pour vérifier. Vos informations restent affichées ici.');
       $$('[data-back]').forEach((item) => { item.disabled = true; });
     } else showAlert(error.name === 'AbortError' ? 'La vérification prend trop de temps. Vos coordonnées sont conservées ; vous pouvez réessayer.' : error.message);
     track('booking_error', { stage: 'submit', reason: transmissionStarted ? 'submit_uncertain' : 'submit_failed' });
@@ -313,7 +313,7 @@ function initialize() {
   $('#booking-form').addEventListener('invalid', (event) => track('booking_validation_error', { stage: 'contact', field: event.target.name }), true);
   $$('a[href^="tel:"]').forEach((link) => link.addEventListener('click', () => track('booking_help', { stage: state.step === 1 ? 'calendar' : 'contact', reason: 'phone' })));
   $('.slot-help a').addEventListener('click', () => track('booking_help', { reason: 'personalized', stage: 'calendar' }));
-  $$('[data-help-reason]').forEach((button) => button.addEventListener('click', () => { track('booking_help', { reason: button.dataset.helpReason, stage: state.step === 1 ? 'calendar' : 'contact' }); $('#help-response').textContent = 'Merci. Vous pouvez nous appeler au 06 07 72 81 64 ou utiliser la demande personnalisée si vous souhaitez une réponse.'; }));
+  $$('[data-help-reason]').forEach((button) => button.addEventListener('click', () => { track('booking_help', { reason: button.dataset.helpReason, stage: state.step === 1 ? 'calendar' : 'contact' }); $('#help-response').textContent = 'Merci. Vous pouvez nous appeler au 07 44 22 78 63 ou utiliser la demande personnalisée si vous souhaitez une réponse.'; }));
   [$('#age'), $('#children')].forEach((input) => input.addEventListener('input', updateGroup));
   $$('input[name="formula"]').forEach((input) => input.addEventListener('change', updateGroup));
   $('#mobile-formula').addEventListener('change', (event) => { $(`input[name="formula"][value="${event.target.value}"]`).checked = true; updateGroup(); });

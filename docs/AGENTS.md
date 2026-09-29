@@ -9,7 +9,7 @@ Le site doit générer des réservations par téléphone, des inscriptions à l'
 
 - **Nom** : Laser Games Tignieu
 - **Adresse** : 60 Route de Crémieu, 38230 Tignieu-Jameyzieu
-- **Téléphone** : 06 07 72 81 64
+- **Téléphone** : 07 44 22 78 63
 - **Activité** : Laser game familial, arcade rétro, billard, fléchettes, anniversaires
 - **Surface** : 400 m² de labyrinthe sur 3 ambiances
 - **Horaires hors vacances scolaires** : lundi et mardi fermés ; mercredi 10h30–12h et 13h30–20h ; jeudi et vendredi 17h–22h ; samedi 10h30–12h et 13h30–22h ; dimanche 10h30–12h et 13h30–20h
