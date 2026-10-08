@@ -73,3 +73,5 @@ Le plan de mesure, la recette réelle, les limites et la prochaine étape sont c
 Lancer les tests métier sans dépendance externe avec `node --test tests/*.test.mjs`.
 
 Le parcours de parties hors anniversaire `/reservation-classique.html` ajoute un groupe décrit, un e-mail obligatoire et un registre Google Sheets privé pour le suivi et la segmentation. Les inscriptions aux offres sont facultatives et distinctes du contact de réservation. Voir [docs/RESERVATIONS-GROUPES.md](docs/RESERVATIONS-GROUPES.md).
+
+L’accueil donne aussi un accès direct au calendrier via le bouton « Anniversaire enfant ». Le formulaire Netlify `contact-question` remplace le téléphone dans la rubrique « Une question ? » : nom, e-mail de réponse et message, sans inscription aux offres. Ses notifications sont adressées à `lasergames38@gmail.com` et `fortescedric@gmail.com` ; l’adresse du visiteur devient le Reply-To. `/contact-question.js` vérifie le reçu `/question-recue` avant d’afficher la réussite et conserve les saisies en cas d’échec. Le POST HTML fonctionne également sans JavaScript.

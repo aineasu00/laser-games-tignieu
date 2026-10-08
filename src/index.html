@@ -227,8 +227,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .opening-hours div{display:grid;grid-template-columns:minmax(90px,.7fr) 1.3fr;gap:14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
   .opening-hours dt{font-family:'Chakra Petch',sans-serif;font-weight:700;color:var(--sand)}
   .opening-hours dd{color:var(--dim)}
-  .big-phone{font-family:'Chakra Petch',sans-serif;font-size:clamp(1.5rem,5vw,2.3rem);font-weight:700;color:var(--alert);text-decoration:none}
-  .big-phone:hover{color:#ff7046}
+  .question-form{display:grid;gap:14px;margin-top:18px;min-width:0}
+  .question-form[hidden]{display:none}
+  .question-form label{display:grid;gap:6px;font-size:.92rem;font-weight:600}
+  .question-form input,.question-form textarea{width:100%;min-width:0;border:1px solid var(--line);border-radius:0;background:var(--void);color:var(--sand);padding:11px 12px;font:inherit;font-weight:400}
+  .question-form textarea{resize:vertical;min-height:130px}
+  .question-form button{border:0;cursor:pointer;font-size:.95rem;width:100%}
+  .question-form button:disabled{opacity:.65;cursor:wait;transform:none}
+  .question-form .honeypot{display:none}
+  .question-note{color:var(--dim);font-size:.82rem}
+  .question-status{margin-top:14px;color:var(--biolume);font-size:.95rem}
+  .question-status.error{color:var(--hazard)}
 
   footer{padding:30px 20px 40px;text-align:center;color:var(--dim);font-size:.85rem;border-top:1px solid var(--line)}
   footer .sig{font-family:'Chakra Petch',sans-serif;letter-spacing:.1em;color:var(--laser);margin-bottom:6px}
@@ -346,6 +355,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <p>Derrière l'airlock : un labyrinthe laser de 400 m² aux allures de jungle extraterrestre, une arcade rétro, un billard — et des souvenirs de vacances à fabriquer en famille, à 30 minutes de Lyon.</p>
     <div class="hero-actions">
       <a class="btn" href="/reservation-classique.html">Réserver mes parties</a>
+      <a class="btn btn-ghost" href="/reservation-anniversaire.html">Anniversaire enfant</a>
       <a class="btn btn-ghost" href="#tarifs">Voir les tarifs</a>
     </div>
     <div class="trust" aria-label="Preuves de confiance">
@@ -532,7 +542,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <section class="infos" id="infos">
   <div class="wrap">
     <p class="eyebrow">Coordonnées d'atterrissage</p>
-    <h2>Nous trouver, nous appeler.</h2>
+    <h2>Nous trouver, nous écrire.</h2>
     <div class="infos-grid">
       <div class="info-block">
         <h3>Horaires hors vacances scolaires</h3>
@@ -553,9 +563,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <p style="margin-top:8px"><a href="https://www.google.com/maps/search/?api=1&query=Laser+Games+60+Route+de+Cr%C3%A9mieu+38230+Tignieu-Jameyzieu" rel="noopener">Ouvrir dans Google Maps</a></p>
       </div>
       <div class="info-block">
-        <h3>Réservation</h3>
-        <a class="big-phone" href="tel:+33744227863">07 44 22 78 63</a>
-        <p style="color:var(--dim);margin-top:8px">Pour réserver, <a href="/reservation-classique.html">envoyez votre demande en ligne</a>. Une question ? Vous pouvez nous appeler.</p>
+        <h3>Une question ?</h3>
+        <p class="lede">Écrivez-nous. Notre équipe vous répondra par e-mail.</p>
+        <form class="question-form" id="question-form" name="contact-question" method="POST" action="/question-recue" data-netlify="true" netlify-honeypot="bot-field">
+          <input type="hidden" name="form-name" value="contact-question">
+          <label class="honeypot" aria-hidden="true">Ne pas remplir<input name="bot-field" tabindex="-1" autocomplete="off"></label>
+          <label for="question-name">Votre nom<input id="question-name" name="nom" autocomplete="name" maxlength="100" required></label>
+          <label for="question-email">Votre e-mail<input id="question-email" name="email" type="email" autocomplete="email" maxlength="160" required></label>
+          <label for="question-message">Votre message<textarea id="question-message" name="message" rows="5" maxlength="3000" placeholder="Comment pouvons-nous vous aider ?" required></textarea></label>
+          <p class="question-note">Ces informations servent à répondre à votre question. Elles ne vous inscrivent pas à une liste d’offres.</p>
+          <button class="btn" type="submit">Envoyer mon message</button>
+        </form>
+        <p id="question-status" class="question-status" role="status" aria-live="polite" tabindex="-1" hidden></p>
       </div>
     </div>
   </div>
@@ -578,5 +597,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     document.querySelectorAll('video').forEach(v => { v.removeAttribute('autoplay'); v.pause(); });
   }
 </script>
+<script defer src="/contact-question.js"></script>
 </body>
 </html>
