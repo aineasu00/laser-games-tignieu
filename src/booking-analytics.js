@@ -1,6 +1,7 @@
 // Deliberately small, consent-gated funnel. No field values or customer IDs.
 const EVENTS = new Set(['booking_open', 'booking_group', 'booking_availability', 'booking_no_slots', 'booking_date_selected', 'booking_slot_selected', 'booking_contact_view', 'booking_form_start', 'booking_validation_error', 'booking_submit', 'booking_error', 'booking_help', 'booking_filter', 'generate_lead']);
 const PARAMETERS = {
+  booking_kind: ['birthday', 'session'],
   formula: ['commandant', 'explorateur'],
   stage: ['calendar', 'contact', 'submit'],
   reason: ['calendar_timeout', 'calendar_unavailable', 'slot_changed', 'validation', 'submit_failed', 'submit_uncertain', 'no_slot', 'phone', 'personalized', 'payment', 'sharing', 'other'],

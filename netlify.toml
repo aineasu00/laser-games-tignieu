@@ -6,6 +6,11 @@
   node_bundler = "esbuild"
 
 [[redirects]]
+  from = "/reservation-classique"
+  to = "/reservation-classique.html"
+  status = 200
+
+[[redirects]]
   from = "/reservation-anniversaire"
   to = "/reservation-anniversaire.html"
   status = 200

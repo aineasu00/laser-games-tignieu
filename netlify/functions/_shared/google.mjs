@@ -105,6 +105,35 @@ export async function listEvents(date, lastDate = date) {
   throw new Error("Planning trop volumineux : vérification manuelle nécessaire.");
 }
 
+export async function sessionSheetRequest(path, options={}) {
+  const spreadsheetId=requiredEnv('GOOGLE_SESSION_SHEET_ID');
+  const token=await accessToken('https://www.googleapis.com/auth/spreadsheets');
+  return googleRequest(`https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(spreadsheetId)}${path}`,options,token);
+}
+
+export async function findSessionRequest(bookingId) {
+  // Only references, not the entire customer file, are read for retry detection.
+  const payload=await sessionSheetRequest(`/values/${encodeURIComponent('Demandes!A2:A10000')}`);
+  const index=(payload.values||[]).findIndex(row=>row[0]===bookingId);
+  return index<0?null:index+2;
+}
+
+export async function appendSessionRow(row) {
+  const result=await sessionSheetRequest(`/values/${encodeURIComponent('Demandes!A:AI')}:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`,{method:'POST',body:JSON.stringify({values:[row]})});
+  const match=result.updates?.updatedRange?.match(/!A(\d+):/);
+  if (!match) throw new Error('Réception Sheets non vérifiée.');
+  return Number(match[1]);
+}
+
+export async function sessionNotificationState(row) {
+  const result=await sessionSheetRequest(`/values/${encodeURIComponent(`Demandes!AF${row}`)}`);
+  return result.values?.[0]?.[0]||'';
+}
+
+export async function markSessionNotified(row) {
+  await sessionSheetRequest(`/values/${encodeURIComponent(`Demandes!AF${row}`)}?valueInputOption=RAW`,{method:'PUT',body:JSON.stringify({values:[['Transmise']]})});
+}
+
 export async function createBirthdayEvent({ bookingId, data, formula, rotations }) {
   const calendarId = Netlify.env.get("GOOGLE_CALENDAR_ID") || CALENDAR_ID;
   const start = parisDateTime(data.date, data.startTime);

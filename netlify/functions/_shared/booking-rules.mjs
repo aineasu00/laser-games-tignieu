@@ -1,16 +1,10 @@
+import { openingWindows } from '../../../src/opening-hours.js';
 export const CAPACITY = 17;
 export const TIME_ZONE = "Europe/Paris";
 
 export const FORMULAS = Object.freeze({
   explorateur: { label: "Explorateur", price: 16, durationMinutes: 50, rotationOffsets: [0] },
   commandant: { label: "Commandant", price: 20, durationMinutes: 120, rotationOffsets: [0, 60] },
-});
-
-const OPENING_WINDOWS = Object.freeze({
-  0: [["10:30", "12:00"], ["13:30", "20:00"]],
-  3: [["10:30", "12:00"], ["13:30", "20:00"]],
-  5: [["17:00", "22:00"]],
-  6: [["10:30", "12:00"], ["13:30", "22:00"]],
 });
 
 export function getFormula(key) {
@@ -79,8 +73,7 @@ export function candidateStarts(date, formulaKey) {
   const formula = getFormula(formulaKey);
   if (!formula) return [];
   if (!isValidDate(date)) return [];
-  const weekday = new Date(`${date}T12:00:00Z`).getUTCDay();
-  const windows = OPENING_WINDOWS[weekday] || [];
+  const windows = openingWindows(date, true);
   const candidates = [];
 
   for (const [opens, closes] of windows) {

@@ -71,3 +71,5 @@ Configuration le 8 septembre 2026 : identifiants Google dans les contextes `depl
 Le plan de mesure, la recette réelle, les limites et la prochaine étape sont consignés dans [docs/OUVERTURE-PROGRESSIVE.md](docs/OUVERTURE-PROGRESSIVE.md).
 
 Lancer les tests métier sans dépendance externe avec `node --test tests/*.test.mjs`.
+
+Le parcours de parties hors anniversaire `/reservation-classique.html` ajoute un groupe décrit, un e-mail obligatoire et un registre Google Sheets privé pour le suivi et la segmentation. Les inscriptions aux offres sont facultatives et distinctes du contact de réservation. Voir [docs/RESERVATIONS-GROUPES.md](docs/RESERVATIONS-GROUPES.md).
