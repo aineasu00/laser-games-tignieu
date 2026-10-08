@@ -17,8 +17,16 @@
 
 [[redirects]]
   from = "/battle-royale"
-  to = "/battle-royale.html"
-  status = 200
+  to = "/"
+  status = 302
+  force = true
+
+# Battle Royale en pause : conserver les fichiers et remettre la route en 200 à la reprise.
+[[redirects]]
+  from = "/battle-royale.html"
+  to = "/"
+  status = 302
+  force = true
 
 [[redirects]]
   from = "/tableau"
