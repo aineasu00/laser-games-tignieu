@@ -62,7 +62,7 @@ test('production : persistance, reprise après notification échouée, doublon �
   if(u.includes(':append')){writes.push(options);assert.ok(u.includes('valueInputOption=RAW'));row=JSON.parse(options.body).values[0];return Response.json({updates:{updatedRange:'Demandes!A2:AI2'}});}
   if(u.includes('values/Demandes!AF2')&&options.method==='PUT'){notified=true;return Response.json({});}
   if(u.includes('values/Demandes!AF2'))return Response.json({values:[[notified?'Transmise':'À transmettre']]});
-  if(u==='https://lasergamestignieu.com/demande-session-recue.html'){if(fail)return new Response('indisponible',{status:503});assert.match(options.body,/form-name=reservation-classique/);return new Response('lgt-session-receipt-v1');}
+  if(u==='https://lasergamestignieu.com/demande-session-recue'){if(fail)return new Response('indisponible',{status:503});assert.match(options.body,/form-name=reservation-classique/);return new Response('lgt-session-receipt-v1');}
   throw new Error('Unexpected request '+u);
  };
  try{

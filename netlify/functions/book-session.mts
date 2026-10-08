@@ -43,7 +43,7 @@ export default async (request:Request,context:Context)=>{
     if (!preview && row && await sessionNotificationState(row)!=='Transmise') {
       // The request is already durably recorded if transmission fails. A retry
       // finds the same reference and retries notification without a new row.
-      const sent=await fetch('https://lasergamestignieu.com/demande-session-recue.html',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:notificationFields({bookingId,data,quote,plan}).toString(),signal:AbortSignal.timeout(12000)});
+      const sent=await fetch('https://lasergamestignieu.com/demande-session-recue',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:notificationFields({bookingId,data,quote,plan}).toString(),signal:AbortSignal.timeout(12000)});
       const receipt=await sent.text();
       if (!sent.ok || !receipt.includes('lgt-session-receipt-v1')) throw new Error('Notification non vérifiée.');
       await markSessionNotified(row);

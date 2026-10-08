@@ -128,7 +128,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     background:var(--void);color:var(--sand);
     font-family:'Manrope',sans-serif;font-size:17px;line-height:1.65;
     -webkit-font-smoothing:antialiased;
-    padding-bottom:calc(64px + env(safe-area-inset-bottom)); /* espace pour la barre d'appel mobile + encoche iPhone */
+    padding-bottom:calc(64px + env(safe-area-inset-bottom)); /* espace pour la réservation mobile + encoche iPhone */
   }
   img,video{display:block;max-width:100%;height:auto}
   a{color:inherit}
@@ -233,7 +233,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   footer{padding:30px 20px 40px;text-align:center;color:var(--dim);font-size:.85rem;border-top:1px solid var(--line)}
   footer .sig{font-family:'Chakra Petch',sans-serif;letter-spacing:.1em;color:var(--laser);margin-bottom:6px}
 
-  /* ---------- barre d'appel mobile ---------- */
+  /* ---------- réservation mobile ---------- */
   .call-bar{position:fixed;bottom:0;left:0;right:0;z-index:60;display:flex;background:var(--alert);border-top:2px solid #120602;padding-bottom:env(safe-area-inset-bottom)}
   .call-bar a{flex:1;text-align:center;padding:16px 10px;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:1rem;letter-spacing:.06em;color:#120602;text-decoration:none}
 
@@ -256,7 +256,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .trust{font-size:.84rem;gap:8px 18px}
     .hero-content{padding-bottom:44px}
     .brand{font-size:.95rem}
-    .header-cta{display:none} /* la barre d'appel orange en bas prend le relais */
+    .header-cta{display:none} /* le bouton de réservation orange en bas prend le relais */
     .header-inner{padding:12px 16px}
     .summer-band{font-size:.68rem;letter-spacing:.1em;white-space:normal;line-height:1.5}
     h1{font-size:clamp(1.9rem,8.5vw,2.6rem)}
@@ -315,7 +315,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <a href="#infos">Infos</a>
       <a class="event" href="battle-royale.html">⚡ Battle Royale</a>
     </nav>
-    <a class="btn header-cta" href="tel:+33744227863">07 44 22 78 63</a>
+    <a class="btn header-cta" href="/reservation-classique.html">Réserver en ligne</a>
   </div>
   <nav class="chip-nav" aria-label="Accès rapide">
     <a href="#laser">🎯 Le laser</a>
@@ -345,7 +345,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <h1>Un vaisseau s'est écrasé à Tignieu.</h1>
     <p>Derrière l'airlock : un labyrinthe laser de 400 m² aux allures de jungle extraterrestre, une arcade rétro, un billard — et des souvenirs de vacances à fabriquer en famille, à 30 minutes de Lyon.</p>
     <div class="hero-actions">
-      <a class="btn" href="tel:+33744227863">Réserver au 07 44 22 78 63</a>
+      <a class="btn" href="/reservation-classique.html">Réserver mes parties</a>
       <a class="btn btn-ghost" href="#tarifs">Voir les tarifs</a>
     </div>
     <div class="trust" aria-label="Preuves de confiance">
@@ -390,7 +390,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <li><strong>Avec ou sans gilet</strong> : même les plus petits peuvent jouer au phaser</li>
           <li>16 gilets, 12 phasers, 4 tours et une <strong>cible à réalité augmentée</strong></li>
         </ul>
-        <a class="btn" style="margin-top:26px" href="tel:+33744227863">Réserver une mission</a>
+        <a class="btn" style="margin-top:26px" href="/reservation-classique.html">Réserver une mission</a>
       </div>
     </div>
   </div>
@@ -494,7 +494,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
     <p class="price-note">Jeton d'arcade : 2 €. <a href="/reservation-classique.html">Réservez vos parties en famille, entre amis ou en groupe.</a> Pour une privatisation, appelez-nous.</p>
     <p class="price-note">Vacances scolaires zone A : du mardi au dimanche, 10h30–20h sans interruption, samedi et dimanche inclus. Lundi fermé. Toussaint : du 17 octobre au 1er novembre 2026.</p>
-    <a class="btn" style="margin-top:18px" href="tel:+33744227863">Réserver au 07 44 22 78 63</a>
+    <a class="btn" style="margin-top:18px" href="/reservation-classique.html">Réserver mes parties</a>
   </div>
 </section>
 
@@ -506,7 +506,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="faq">
       <details>
         <summary>Faut-il réserver ?</summary>
-        <p>La réservation est fortement conseillée, surtout les week-ends et pendant les vacances — un simple appel au 07 44 22 78 63 suffit pour bloquer votre créneau et éviter l'attente.</p>
+        <p>La réservation est fortement conseillée, surtout les week-ends et pendant les vacances. <a href="/reservation-classique.html">Choisissez votre groupe et votre horaire en ligne</a>, puis envoyez votre demande. Notre équipe la reçoit par e-mail et vous confirme la réservation après vérification du planning.</p>
       </details>
       <details>
         <summary>À partir de quel âge peut-on jouer ?</summary>
@@ -555,7 +555,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="info-block">
         <h3>Réservation</h3>
         <a class="big-phone" href="tel:+33744227863">07 44 22 78 63</a>
-        <p style="color:var(--dim);margin-top:8px">Un appel suffit pour bloquer votre créneau.</p>
+        <p style="color:var(--dim);margin-top:8px">Pour réserver, <a href="/reservation-classique.html">envoyez votre demande en ligne</a>. Une question ? Vous pouvez nous appeler.</p>
       </div>
     </div>
   </div>
@@ -568,9 +568,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <p>Laser game · Arcade rétro · Billard · Fléchettes · Anniversaires — 60 Route de Crémieu, 38230 Tignieu-Jameyzieu · <a href="tel:+33744227863">07 44 22 78 63</a></p>
 </footer>
 
-<!-- barre d'appel fixe sur mobile -->
+<!-- réservation en ligne fixe sur mobile -->
 <div class="call-bar">
-  <a href="tel:+33744227863">☎ Réserver — 07 44 22 78 63</a>
+  <a href="/reservation-classique.html">Réserver une partie</a>
 </div>
 
 <script>
