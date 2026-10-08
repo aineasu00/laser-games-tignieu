@@ -137,7 +137,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
   /* ---------- header ---------- */
   header{position:sticky;top:0;z-index:50;background:rgba(11,14,19,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-  .header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:12px 20px;gap:12px}
+  .header-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:12px 20px;gap:12px}
   .brand{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:1.05rem;letter-spacing:.06em;text-decoration:none;color:var(--laser);white-space:nowrap}
   .brand span{color:var(--alert)}
   nav{display:none;gap:26px}
@@ -145,6 +145,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   nav a:hover,nav a:focus-visible{color:var(--biolume)}
   nav a.event{color:var(--alert)}
   nav a.event:hover,nav a.event:focus-visible{color:#ff7046}
+  .header-inner nav{gap:18px}.header-inner nav a{font-size:.75rem;letter-spacing:.08em;white-space:nowrap}.header-cta{white-space:nowrap;flex-shrink:0}
   .btn{display:inline-block;font-family:'Chakra Petch',sans-serif;font-weight:700;letter-spacing:.08em;text-decoration:none;text-align:center;background:var(--alert);color:#120602;padding:13px 24px;clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);transition:transform .15s ease,background .2s}
   .btn:hover,.btn:focus-visible{background:#ff7046;transform:translateY(-1px)}
   .btn-ghost{background:transparent;color:var(--biolume);border:1px solid var(--biolume)}
@@ -276,6 +277,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .review-grid{grid-template-columns:repeat(3,1fr)}
   }
   @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
+  @media(min-width:820px) and (max-width:1199px){.header-inner nav{display:none}.chip-nav{display:flex}}
   :focus-visible{outline:2px solid var(--biolume);outline-offset:3px}
 </style>
 <!-- TikTok Pixel Code Start -->
@@ -307,7 +309,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <a href="#laser">Le laser</a>
       <a href="#base">Arcade & jeux</a>
       <a href="/anniversaires.html">Anniversaires</a>
-      <a href="/reservation-classique.html">Réserver une partie</a>
+      <a href="/reservation-classique.html">Réserver</a>
       <a href="#tarifs">Tarifs</a>
       <a href="#faq">Questions</a>
       <a href="#infos">Infos</a>
