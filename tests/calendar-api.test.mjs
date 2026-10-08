@@ -9,6 +9,7 @@ import { listEvents } from '../netlify/functions/_shared/google.mjs';
 const preview = { deploy: { context: 'deploy-preview' } };
 const today = new Date().toLocaleDateString('en-CA', { timeZone: 'Europe/Paris' });
 const nextFriday = Array.from({ length: 8 }, (_, n) => shiftDate(today, n + 1)).find((date) => new Date(`${date}T12:00:00Z`).getUTCDay() === 5);
+const nextWednesday = Array.from({ length: 8 }, (_, n) => shiftDate(today, n + 1)).find((date) => new Date(`${date}T12:00:00Z`).getUTCDay() === 3);
 const env = new Map();
 globalThis.Netlify = { env: { get: (key) => env.get(key) } };
 const request = (data) => new Request('https://preview.example/api/book-birthday', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
@@ -50,6 +51,19 @@ test('la simulation calcule le prix côté serveur et ne crée pas de doublon de
 test('le jeudi est refusé même si une requête contourne le calendrier', async () => {
   const thursday = shiftDate(nextFriday, 6);
   assert.equal((await booking(request({ ...valid, date: thursday, expectedUnitPrice: 20 }), preview)).status, 409);
+});
+
+test('le mercredi est annoncé et revérifié à 15 € par enfant', async () => {
+  const calendar = await availability(new Request(`https://preview.example/api/birthday-availability?date=${nextWednesday}&formula=commandant&age=8&children=6`), preview);
+  const day = (await calendar.json()).days[0];
+  assert.equal(day.quote.unitPrice, 15);
+  assert.equal(day.quote.totalEstimate, 90);
+  assert.equal(day.quote.discountedOffer, true);
+  const data = { ...valid, date: nextWednesday, startTime: '13:30' };
+  const response = await booking(request(data), preview);
+  assert.equal(response.status, 200);
+  assert.equal((await response.json()).totalEstimate, 90);
+  assert.equal((await booking(request({ ...data, expectedUnitPrice: 20 }), preview)).status, 409);
 });
 
 test('aucune écriture de production tant que la réservation réelle n’est pas validée', async () => {

@@ -27,12 +27,18 @@ test("les horaires respectent la durée réelle de chaque formule", () => {
   assert.equal(candidateStarts("2026-09-12", "explorateur").at(-1), "21:00");
 });
 
-test("mercredi ouvert, jeudi exclu et remise vendredi uniquement sur Commandant", () => {
+test("mercredi ouvert, jeudi exclu et remise mercredi/vendredi uniquement sur Commandant", () => {
   assert.ok(candidateStarts("2026-09-09", "commandant").includes("13:30"));
   assert.deepEqual(candidateStarts("2026-09-10", "commandant"), []);
   assert.deepEqual(candidateStarts("2026-09-10", "explorateur"), []);
+  assert.equal(quoteBooking("2026-09-09", "commandant", 6).totalEstimate, 90);
+  assert.equal(quoteBooking("2026-09-09", "commandant", 6).discountedOffer, true);
+  assert.equal(quoteBooking("2026-09-09", "commandant", 6).fridayOffer, false);
   assert.equal(quoteBooking("2026-09-11", "commandant", 6).totalEstimate, 90);
+  assert.equal(quoteBooking("2026-09-11", "commandant", 6).fridayOffer, true);
   assert.equal(quoteBooking("2026-09-12", "commandant", 6).totalEstimate, 120);
+  assert.equal(quoteBooking("2026-09-13", "commandant", 6).totalEstimate, 120);
+  assert.equal(quoteBooking("2026-09-09", "explorateur", 6).unitPrice, 16);
   assert.equal(quoteBooking("2026-09-11", "explorateur", 6).unitPrice, 16);
 });
 

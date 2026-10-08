@@ -16,13 +16,13 @@ La bannière passe de « Calendrier fictif » à « Lecture de Google Agenda ».
 
 - Lecture mensuelle avec toutes les pages Google, périmètre en lecture seule et fuseau Europe/Paris.
 - Actualisation du calendrier visible toutes les 60 secondes et bouton de rafraîchissement ; relecture au test de réservation. Pas de notification push ni de promesse de synchronisation instantanée à ce stade.
-- Disponibilités publiques sans noms, descriptions ou coordonnées ; jeudi exclu et prix vendredi calculé par le serveur.
+- Disponibilités publiques sans noms, descriptions ou coordonnées ; jeudi exclu et prix mercredi/vendredi calculé par le serveur.
 - Horaires de présence et passages séparés, blocages à la journée et horaires traités de manière prudente.
 
 ## Avant les réservations réelles
 
 - Valider l’inventaire par type de matériel, les tables et la capacité d’encadrement.
-- Vérifier les descriptions des événements historiques, les fermetures, les horaires de vacances/jours fériés et les heures d’application du vendredi à 15 €.
+- Vérifier les descriptions des événements historiques, les fermetures, les horaires de vacances/jours fériés et les heures d’application du tarif mercredi/vendredi à 15 €.
 - Installer un stockage avec contrôle transactionnel de la capacité et reprise fiable des opérations. Google Agenda seul ne protège pas contre deux confirmations simultanées ; un verrou Blobs non atomique non plus.
 - Valider les écritures Google/Sheets et le statut de confirmation, puis ouvrir explicitement les réservations réelles après recette. Configurer séparément les e-mails transactionnels.
 

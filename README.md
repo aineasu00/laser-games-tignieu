@@ -44,7 +44,7 @@ Déploiement continu activé via GitHub → Netlify.
 
 ## Demandes anniversaire — ouverture progressive
 
-Le parcours `/reservation-anniversaire.html` affiche le calendrier dès l’entrée. L’âge, l’effectif et la formule le personnalisent sur la même page. Les filtres mercredi/vendredi/week-end, les jours complets et le prix estimé viennent du serveur. Le jeudi est exclu des anniversaires ; Commandant est à 15 € par enfant le vendredi après l’école (goûter, boissons et friandises inclus).
+Le parcours `/reservation-anniversaire.html` affiche le calendrier dès l’entrée. L’âge, l’effectif et la formule le personnalisent sur la même page. Les filtres mercredi/vendredi/week-end, les jours complets et le prix estimé viennent du serveur. Le jeudi est exclu des anniversaires ; Commandant est à 15 € par enfant le mercredi et le vendredi, contre 20 € les autres jours (goûter, boissons et friandises inclus).
 
 Deux Netlify Functions :
 
@@ -64,7 +64,7 @@ Les Deploy Previews utilisent par défaut un calendrier explicitement fictif (do
 
 Le navigateur actualise le mois toutes les 60 secondes lorsqu’il est visible et au clic sur « Actualiser ». La validation relit l’agenda. Les notifications push Google ne sont pas encore installées ; ne pas annoncer une synchronisation instantanée.
 
-Configuration restant à terminer : règles de vacances/jours fériés et limites horaires de l’offre vendredi, capacité par type d’équipement, tables et encadrement, stockage transactionnel anti-doublon, accès au registre Sheets et reprise des synchronisations partielles. Les anciennes descriptions d’agenda doivent être vérifiées avant ouverture des réservations réelles.
+Configuration restant à terminer : règles de vacances/jours fériés et limites horaires de l’offre mercredi/vendredi, capacité par type d’équipement, tables et encadrement, stockage transactionnel anti-doublon, accès au registre Sheets et reprise des synchronisations partielles. Les anciennes descriptions d’agenda doivent être vérifiées avant ouverture des réservations réelles.
 
 Configuration le 8 septembre 2026 : identifiants Google dans les contextes `deploy-preview` et `production`. `BOOKING_PREVIEW_READ_CALENDAR=true` active la lecture réelle en préversion. `BOOKING_REQUESTS_ENABLED=true` ouvre uniquement les demandes réelles en production. Les deux contextes utilisent OAuth `calendar.readonly`, malgré le droit writer déjà accordé au compte de service.
 

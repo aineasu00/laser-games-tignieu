@@ -32,9 +32,11 @@ export function shiftDate(date, days) {
 export function quoteBooking(date, formulaKey, children) {
   const formula = getFormula(formulaKey);
   if (!formula || !isValidDate(date)) throw new Error("Formule ou date invalide.");
-  const fridayOffer = formulaKey === "commandant" && new Date(`${date}T12:00:00Z`).getUTCDay() === 5;
-  const unitPrice = fridayOffer ? 15 : formula.price;
-  return { unitPrice, totalEstimate: unitPrice * children, fridayOffer, durationMinutes: formula.durationMinutes, label: formula.label };
+  const weekday = new Date(`${date}T12:00:00Z`).getUTCDay();
+  const discountedOffer = formulaKey === "commandant" && [3, 5].includes(weekday);
+  const fridayOffer = discountedOffer && weekday === 5;
+  const unitPrice = discountedOffer ? 15 : formula.price;
+  return { unitPrice, totalEstimate: unitPrice * children, discountedOffer, fridayOffer, durationMinutes: formula.durationMinutes, label: formula.label };
 }
 
 export function ageBand(age) {

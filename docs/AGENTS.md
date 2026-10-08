@@ -66,7 +66,7 @@ Le site doit générer des réservations par téléphone, des inscriptions à l'
 ### État de la préversion au 8 septembre 2026
 
 - Calendrier en première étape, groupe et formule dans le même écran ; coordonnées ensuite.
-- Mercredi proposé. Aucun anniversaire le jeudi. Commandant complète à 15 € par enfant le vendredi après l’école, contre 20 € au tarif habituel ; Explorateur reste à 16 €.
+- Mercredi proposé. Aucun anniversaire le jeudi. Commandant complète à 15 € par enfant le mercredi et le vendredi (instruction de Cédric du 8 octobre 2026), contre 20 € au tarif habituel ; Explorateur reste à 16 €.
 - Présenter 20 minutes de jeu + environ 10 minutes de préparation, jamais 30 minutes de jeu.
 - Disponibilités mensuelles calculées par le serveur. Google peut être lu depuis la préversion avec un compte de service et `BOOKING_PREVIEW_READ_CALENDAR=true`.
 - Le mode fictif est clairement signalé. Une panne Google ne doit pas ouvrir artificiellement tous les créneaux.

@@ -108,13 +108,13 @@ function renderCalendar() {
     button.classList.toggle('filtered', !matchesFilter(date));
     button.classList.toggle('selected', state.date === date);
     button.disabled = !matchesFilter(date) || !['available', 'request'].includes(status);
-    const friday = weekday === 5 && state.formula === 'commandant' && !outside && !closed;
-    button.setAttribute('aria-label', `${formatDate(date)} : ${names[status]}${friday ? ', Commandant à 15 € par enfant' : ''}`);
+    const discountedDay = [3, 5].includes(weekday) && state.formula === 'commandant' && !outside && !closed;
+    button.setAttribute('aria-label', `${formatDate(date)} : ${names[status]}${discountedDay ? ', Commandant à 15 € par enfant' : ''}`);
     button.setAttribute('aria-pressed', String(state.date === date));
     button.title = names[status];
     button.textContent = String(day);
     const hint = document.createElement('small');
-    hint.textContent = status === 'full' ? '×' : status === 'closed' ? '—' : status === 'request' ? '?' : friday ? '15 €' : status === 'available' ? '●' : '';
+    hint.textContent = status === 'full' ? '×' : status === 'closed' ? '—' : status === 'request' ? '?' : discountedDay ? '15 €' : status === 'available' ? '●' : '';
     button.append(hint);
     button.addEventListener('click', () => selectDate(date));
     grid.append(button);
@@ -203,17 +203,18 @@ function renderSlots() {
     list.append(button);
   }
   const quote = $('#date-quote'); quote.hidden = false;
-  quote.textContent = `${day.quote.label} · ${euro(day.quote.unitPrice)} / enfant · ${euro(day.quote.totalEstimate)} estimés pour ${state.children} enfants. Goûter, boissons et friandises inclus.${day.quote.fridayOffer ? ' Offre du vendredi appliquée.' : ''}`;
-  $('#commandant-price').textContent = day.quote.fridayOffer ? '15 €' : '20 €';
-  $('#mobile-formula option[value="commandant"]').textContent = `2 parties · Commandant · ${day.quote.fridayOffer ? '15' : '20'} € / enfant`;
+  quote.textContent = `${day.quote.label} · ${euro(day.quote.unitPrice)} / enfant · ${euro(day.quote.totalEstimate)} estimés pour ${state.children} enfants. Goûter, boissons et friandises inclus.${day.quote.discountedOffer ? ' Tarif mercredi/vendredi appliqué.' : ''}`;
+  const commandantPrice = [3, 5].includes(parseDate(day.date).getUTCDay()) ? 15 : 20;
+  $('#commandant-price').textContent = `${commandantPrice} €`;
+  $('#mobile-formula option[value="commandant"]').textContent = `2 parties · Commandant · ${commandantPrice} € / enfant`;
   const suggestion = $('#friday-suggestion'); suggestion.replaceChildren(); suggestion.hidden = true;
-  if (state.formula === 'commandant' && !day.quote.fridayOffer) {
-    const friday = state.days.find((item) => item.quote.fridayOffer && item.status === 'available');
-    if (friday) {
+  if (state.formula === 'commandant' && !day.quote.discountedOffer) {
+    const discountedDay = state.days.find((item) => item.quote.discountedOffer && item.status === 'available');
+    if (discountedDay) {
       suggestion.hidden = false;
-      suggestion.append(`La même formule le vendredi : ${euro(state.children * 5)} d’économie pour votre groupe. `);
-      const link = document.createElement('button'); link.type = 'button'; link.textContent = `Voir ${formatDate(friday.date)}`;
-      link.addEventListener('click', () => { state.filter = 'all'; syncFilters(); selectDate(friday.date); }); suggestion.append(link);
+      suggestion.append(`La même formule le mercredi ou le vendredi : ${euro(state.children * 5)} d’économie pour votre groupe. `);
+      const link = document.createElement('button'); link.type = 'button'; link.textContent = `Voir ${formatDate(discountedDay.date)}`;
+      link.addEventListener('click', () => { state.filter = 'all'; syncFilters(); selectDate(discountedDay.date); }); suggestion.append(link);
     }
   }
 }
@@ -224,7 +225,7 @@ function selectSlot(startTime, quote) {
   state.quote = quote;
   state.idempotencyKey = crypto.randomUUID();
   $('#booking-summary').textContent = `${formatDate(state.date)} · arrivée à ${startTime}, fin vers ${endTime(startTime, quote.durationMinutes)} · ${quote.label} · environ ${state.children} enfants de ${state.age} ans.`;
-  $('#booking-price').textContent = `${euro(quote.totalEstimate)} estimés · ${euro(quote.unitPrice)} par enfant${quote.fridayOffer ? ' · offre du vendredi' : ''}`;
+  $('#booking-price').textContent = `${euro(quote.totalEstimate)} estimés · ${euro(quote.unitPrice)} par enfant${quote.discountedOffer ? ' · tarif mercredi/vendredi' : ''}`;
   $('#confirm-booking').textContent = submitLabel();
   $('#contact-mode').textContent = state.preview ? 'Test uniquement : aucune demande ne sera envoyée.' : 'Votre demande n’est pas encore une réservation confirmée. Nous vérifions l’organisation et vous répondons par e-mail.';
   showStep(2);
